@@ -115,8 +115,22 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (param is null) return;
         var parts = param.Split(':');
         if (parts.Length < 2) return;
-        double dist = (parts[1] == "+" ? 1 : -1) * GetJogStep();
-        SendCommand($"G91 G1 {parts[0]}{dist:F4} F{JogFeedRate:F0}");
+
+        var axis = parts[0];
+        var dir  = parts[1];
+
+        // Diagonal XY move – dir encodes two signs, e.g. "++" / "+-" / "-+" / "--"
+        if (axis == "XY" && dir.Length == 2)
+        {
+            double dx = (dir[0] == '+' ? 1 : -1) * GetJogStep();
+            double dy = (dir[1] == '+' ? 1 : -1) * GetJogStep();
+            SendCommand($"G91 G1 X{dx:F4} Y{dy:F4} F{JogFeedRate:F0}");
+        }
+        else
+        {
+            double dist = (dir == "+" ? 1 : -1) * GetJogStep();
+            SendCommand($"G91 G1 {axis}{dist:F4} F{JogFeedRate:F0}");
+        }
         SendCommand("G90");
     }
 

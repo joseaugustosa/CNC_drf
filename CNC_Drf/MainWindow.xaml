@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:CNC_Drf.Views"
         xmlns:dlg="clr-namespace:CNC_Drf.Dialogs"
-        Title="DrufelCNC" Height="700" Width="1280"
+        Title="CNC_Drf" Height="700" Width="1280"
         MinHeight="580" MinWidth="960"
         Background="#2b2b2b" Foreground="#e0e0e0"
         Closing="Window_Closing">

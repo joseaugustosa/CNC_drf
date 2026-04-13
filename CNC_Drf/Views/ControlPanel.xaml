@@ -171,35 +171,128 @@
             <Button Content="X100" FontSize="11" FontWeight="Bold" Height="24" Margin="1" Command="{Binding SetStepCommand}" CommandParameter="100" Background="#444" Foreground="White" BorderBrush="#666"/>
         </UniformGrid>
 
-        <!-- ── Jog Buttons ────────────────────────────────────────────── -->
-        <Grid Margin="2,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="28"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                <TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
-                <TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
-                <TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
-                <TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
-                <TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
-                <TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
-            </StackPanel>
-            <UniformGrid Grid.Column="1" Rows="6" Columns="2" Margin="2">
-                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="X:-" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="X:+" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
-                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Y:-" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Y:+" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
-                <Button Content="▲" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Z:+" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
-                <Button Content="▼" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Z:-" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
-                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="A:-" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="A:+" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
-                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="B:-" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="B:+" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
-                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="C:-" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="C:+" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
-            </UniformGrid>
-        </Grid>
+        <!-- ── Jog Tabs ──────────────────────────────────────────────── -->
+        <TabControl Margin="2,0" Background="#2b2b2b" BorderBrush="#555">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Background"   Value="#333"/>
+                    <Setter Property="Foreground"   Value="#ccc"/>
+                    <Setter Property="FontSize"     Value="11"/>
+                    <Setter Property="FontWeight"   Value="Bold"/>
+                    <Setter Property="Padding"      Value="10,3"/>
+                </Style>
+            </TabControl.Resources>
+
+            <!-- ── Tab 1 · XY ──────────────────────────────────────────── -->
+            <TabItem Header="XY">
+                <Grid Margin="4,6,4,4" Background="Transparent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Row 0 – diagonais Norte -->
+                    <Button Grid.Row="0" Grid.Column="0" Content="↖" FontSize="17" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="XY:-+"
+                            ToolTip="X− Y+" Background="#3a3a3a" Foreground="#888" BorderBrush="#555"/>
+                    <Button Grid.Row="0" Grid.Column="1" Content="↑" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="Y:+"
+                            ToolTip="Y+" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="↗" FontSize="17" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="XY:++"
+                            ToolTip="X+ Y+" Background="#3a3a3a" Foreground="#888" BorderBrush="#555"/>
+
+                    <!-- Row 1 – X / HOME / X -->
+                    <Button Grid.Row="1" Grid.Column="0" Content="←" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="X:-"
+                            ToolTip="X−" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
+                    <Button Grid.Row="1" Grid.Column="1" Content="⌂" FontSize="15" Margin="2"
+                            Command="{Binding GotoX0Y0Command}"
+                            ToolTip="Goto X0 Y0" Background="#2a2a3a" Foreground="#90caf9" BorderBrush="#446"/>
+                    <Button Grid.Row="1" Grid.Column="2" Content="→" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="X:+"
+                            ToolTip="X+" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
+
+                    <!-- Row 2 – diagonais Sul -->
+                    <Button Grid.Row="2" Grid.Column="0" Content="↙" FontSize="17" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="XY:--"
+                            ToolTip="X− Y−" Background="#3a3a3a" Foreground="#888" BorderBrush="#555"/>
+                    <Button Grid.Row="2" Grid.Column="1" Content="↓" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="Y:-"
+                            ToolTip="Y−" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
+                    <Button Grid.Row="2" Grid.Column="2" Content="↘" FontSize="17" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="XY:+-"
+                            ToolTip="X+ Y−" Background="#3a3a3a" Foreground="#888" BorderBrush="#555"/>
+                </Grid>
+            </TabItem>
+
+            <!-- ── Tab 2 · Z / A ────────────────────────────────────────── -->
+            <TabItem Header="Z / A">
+                <Grid Margin="4,6,4,4" Background="Transparent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Z -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Z"
+                               Foreground="#1e88e5" FontWeight="Bold" FontSize="13"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Button Grid.Row="0" Grid.Column="1" Content="↑" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="Z:+"
+                            ToolTip="Z+" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="↓" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="Z:-"
+                            ToolTip="Z−" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
+
+                    <!-- A -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="A"
+                               Foreground="#ab47bc" FontWeight="Bold" FontSize="13"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Button Grid.Row="1" Grid.Column="1" Content="←" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="A:-"
+                            ToolTip="A−" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
+                    <Button Grid.Row="1" Grid.Column="2" Content="→" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="A:+"
+                            ToolTip="A+" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
+
+                    <!-- B -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="B"
+                               Foreground="#26a69a" FontWeight="Bold" FontSize="13"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Button Grid.Row="2" Grid.Column="1" Content="←" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="B:-"
+                            ToolTip="B−" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
+                    <Button Grid.Row="2" Grid.Column="2" Content="→" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="B:+"
+                            ToolTip="B+" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
+
+                    <!-- C -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="C"
+                               Foreground="#ff7043" FontWeight="Bold" FontSize="13"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Button Grid.Row="3" Grid.Column="1" Content="←" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="C:-"
+                            ToolTip="C−" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
+                    <Button Grid.Row="3" Grid.Column="2" Content="→" FontSize="20" Margin="2"
+                            Command="{Binding JogAxisCommand}" CommandParameter="C:+"
+                            ToolTip="C+" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
         <!-- ── EMERGENCY STOP ─────────────────────────────────────────── -->
         <Button Margin="4,6,4,2" Height="52" Command="{Binding EmergencyStopCommand}"
