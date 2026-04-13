@@ -25,12 +25,6 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#313244"/>
     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#cdd6f4"/>
 
-    <!-- ── Window ───────────────────────────────────────────────────────── -->
-    <Style TargetType="Window">
-        <Setter Property="Background" Value="{StaticResource BgBase}"/>
-        <Setter Property="Foreground" Value="{StaticResource FgText}"/>
-    </Style>
-
     <!-- ── GroupBox ─────────────────────────────────────────────────────── -->
     <Style x:Key="DarkGroupBox" TargetType="GroupBox">
         <Setter Property="Foreground"      Value="{StaticResource FgText}"/>

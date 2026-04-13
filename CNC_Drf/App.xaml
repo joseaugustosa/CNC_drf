@@ -1,12 +1,14 @@
 ﻿<Application x:Class="CNC_Drf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="clr-namespace:CNC_Drf.Core"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Assets/Themes/DarkTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <core:BoolToSpindleLabelConverter  x:Key="BoolToSpindleLabel"/>
+        <core:BoolToConnectLabelConverter  x:Key="BoolToConnectLabel"/>
+        <core:BoolToBgConverter            x:Key="BoolToBgConverter"/>
+        <core:InvertBoolConverter          x:Key="InvertBoolConverter"/>
+        <core:EmptyToVisibleConverter      x:Key="EmptyToVisibleConverter"/>
+        <core:CommentColorConverter        x:Key="CommentColorConverter"/>
     </Application.Resources>
 </Application>
