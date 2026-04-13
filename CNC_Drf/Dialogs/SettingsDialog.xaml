@@ -1,37 +1,38 @@
 <Window x:Class="CNC_Drf.Dialogs.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Width="730" Height="560"
+        xmlns:local="clr-namespace:CNC_Drf.Dialogs"
+        Title="Settings" Width="1020" Height="640"
         WindowStartupLocation="CenterOwner"
         Background="#f0f0f0" Foreground="#111"
-        ResizeMode="CanResize" MinWidth="600" MinHeight="460">
+        ResizeMode="CanResize" MinWidth="860" MinHeight="500">
 
     <Window.Resources>
-        <!-- Estilos gerais Light theme -->
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="#111"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Padding" Value="2,0"/>
-        </Style>
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#111"/>
             <Setter Property="BorderBrush" Value="#aaa"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="3,2"/>
+            <Setter Property="Padding" Value="2,1"/>
             <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#111"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#111"/>
             <Setter Property="BorderBrush" Value="#aaa"/>
             <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Height" Value="24"/>
+            <Setter Property="Height" Value="22"/>
         </Style>
-        <Style TargetType="CheckBox">
+        <Style TargetType="Label">
             <Setter Property="Foreground" Value="#111"/>
             <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="2,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style TargetType="RadioButton">
@@ -41,44 +42,50 @@
         <Style TargetType="GroupBox">
             <Setter Property="Foreground" Value="#333"/>
             <Setter Property="BorderBrush" Value="#bbb"/>
-            <Setter Property="Padding" Value="6"/>
-            <Setter Property="Margin" Value="0,4,0,0"/>
+            <Setter Property="Padding" Value="4"/>
             <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#111"/>
-            <Setter Property="BorderBrush" Value="#ccc"/>
-            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#e0e0e0"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="RowHeight" Value="22"/>
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-            <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="SelectionMode" Value="Single"/>
+
+        <!-- Spinner template (TextBox + Up/Down) -->
+        <DataTemplate x:Key="SpinnerTemplate">
+            <Grid Width="70" Height="22">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding}" VerticalContentAlignment="Center"/>
+                <StackPanel Grid.Column="1">
+                    <Button Content="▲" Height="11" FontSize="7" Padding="0" Background="White" BorderBrush="#bbb"/>
+                    <Button Content="▼" Height="11" FontSize="7" Padding="0" Background="White" BorderBrush="#bbb"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <!-- Status indicator (red/green square) -->
+        <Style x:Key="StatusIndicator" TargetType="Border">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="14"/>
+            <Setter Property="CornerRadius" Value="1"/>
+            <Setter Property="Background" Value="#e53935"/>
         </Style>
 
-        <!-- Tab item com ícone grande + texto bold -->
+        <!-- Tab style with icon -->
         <Style TargetType="TabItem">
             <Setter Property="Background" Value="#e0e0e0"/>
             <Setter Property="Foreground" Value="#333"/>
-            <Setter Property="Padding" Value="10,6"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                BorderBrush="#bbb" BorderThickness="1,1,1,0"
-                                Margin="1,1,1,0" Padding="6,4">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock x:Name="Icon" Text="{TemplateBinding Tag}"
-                                           FontSize="22" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBlock Text="{TemplateBinding Header}"
-                                           VerticalAlignment="Center" FontSize="11"
-                                           FontWeight="Bold"
+                                BorderBrush="#aaa" BorderThickness="1,1,1,0"
+                                Margin="1,1,0,0">
+                            <StackPanel Orientation="Horizontal" Margin="6,4">
+                                <ContentPresenter x:Name="Icon" Content="{TemplateBinding Tag}"
+                                                  VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="{TemplateBinding Header}" FontWeight="Bold"
+                                           FontSize="11" VerticalAlignment="Center"
                                            Foreground="{TemplateBinding Foreground}"/>
                             </StackPanel>
                         </Border>
@@ -89,503 +96,1161 @@
                                 <Setter Property="Foreground" Value="#000"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#d0e8ff"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#d4e8ff"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- TreeView item style -->
+        <Style TargetType="TreeViewItem">
+            <Setter Property="IsExpanded" Value="True"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
     </Window.Resources>
 
     <DockPanel>
-        <!-- Botões Apply / Save / Cancel -->
-        <Border DockPanel.Dock="Bottom" Background="#e8e8e8"
-                BorderBrush="#bbb" BorderThickness="0,1,0,0" Padding="8,6">
+        <!-- Bottom buttons: Apply / Save / Cancel -->
+        <Border DockPanel.Dock="Bottom" Background="#e4e4e4"
+                BorderBrush="#bbb" BorderThickness="0,1,0,0" Padding="6,4">
             <Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Click="BtnApply_Click" Width="90" Margin="0,0,8,0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="✔" Foreground="#2e7d32" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Apply" FontWeight="Bold" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                <Button HorizontalAlignment="Left" Width="90" Click="BtnApply_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="✔" Foreground="#2e7d32" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Apply" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Click="BtnSave_Click" Width="90" Margin="0,0,8,0">
+                    <Button Width="90" Margin="0,0,8,0" Click="BtnSave_Click">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="💾" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Save" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock Text="💾" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Save" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button IsCancel="True" Width="90">
+                    <Button Width="90" IsCancel="True">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="✖" Foreground="#c62828" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Cancel" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock Text="✖" Foreground="#c62828" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Cancel" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- TabControl principal -->
-        <TabControl Background="White" BorderBrush="#bbb" Padding="0">
+        <TabControl x:Name="MainTabControl" Background="White" BorderBrush="#aaa">
 
-            <!-- ═══════════ TAB: Common ═══════════ -->
-            <TabItem Header="Common" Tag="⚙">
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Common                                                 -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Common">
+                <TabItem.Tag>
+                    <TextBlock Text="⚙" FontSize="20" Foreground="#555"/>
+                </TabItem.Tag>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Common settings" FontSize="13" FontWeight="Bold" Margin="0,0,0,8" Foreground="#333"/>
+                    <Grid Margin="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <!-- TreeView / lista de portas por função -->
-                        <Border BorderBrush="#ccc" BorderThickness="1">
-                            <TreeView x:Name="CommonTree" Background="White" BorderThickness="0"
-                                      FontSize="11" MinHeight="300">
-                                <!-- Spindle -->
-                                <TreeViewItem Header="Spindle Output Ports M3, M4, M5" IsExpanded="True"
-                                              FontWeight="SemiBold">
-                                    <TreeViewItem Header="" x:Name="TviSpindleOn">
-                                        <TreeViewItem.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200"/>
-                                                        <ColumnDefinition Width="80"/>
-                                                        <ColumnDefinition Width="60"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="Turn the spindle" FontStyle="Italic"/>
-                                                    <TextBox Grid.Column="1" x:Name="TbSpOn" Text="0" Margin="2,1" Height="20"/>
-                                                    <CheckBox Grid.Column="2" x:Name="ChkSpOn" Margin="4,0"/>
-                                                    <TextBlock Grid.Column="3" Text="M3, M4, M5" Foreground="#666"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </TreeViewItem.HeaderTemplate>
-                                    </TreeViewItem>
-                                    <TreeViewItem Header="">
-                                        <TreeViewItem.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200"/>
-                                                        <ColumnDefinition Width="80"/>
-                                                        <ColumnDefinition Width="60"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="Spindle CW clockwise" FontStyle="Italic"/>
-                                                    <TextBox Grid.Column="1" Text="1" Margin="2,1" Height="20"/>
-                                                    <CheckBox Grid.Column="2" Margin="4,0"/>
-                                                    <TextBlock Grid.Column="3" Text="M3" Foreground="#666"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </TreeViewItem.HeaderTemplate>
-                                    </TreeViewItem>
-                                    <TreeViewItem Header="">
-                                        <TreeViewItem.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200"/>
-                                                        <ColumnDefinition Width="80"/>
-                                                        <ColumnDefinition Width="60"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="Spindle CCW counterclockwise" FontStyle="Italic"/>
-                                                    <TextBox Grid.Column="1" Text="2" Margin="2,1" Height="20"/>
-                                                    <CheckBox Grid.Column="2" Margin="4,0"/>
-                                                    <TextBlock Grid.Column="3" Text="M4" Foreground="#666"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </TreeViewItem.HeaderTemplate>
-                                    </TreeViewItem>
-                                </TreeViewItem>
+                        <!-- Col 1: Speeds + Optimization + Tool Zero -->
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <GroupBox Header="The default speed for">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="32" Height="32" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="G0" FontSize="11" FontWeight="Bold" Foreground="#1b5e20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Accelerated tool movement" FontSize="10" Foreground="#555" TextWrapping="Wrap" Width="130"/>
+                                            <TextBlock Text="(idle movement, G00)" FontSize="10" Foreground="#555"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBox x:Name="TbG00Speed" Text="500" Width="55" Height="22"/>
+                                                <TextBlock Text=" mm/min" VerticalAlignment="Center" FontSize="10" Foreground="#555"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <Border Width="32" Height="32" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="G1" FontSize="11" FontWeight="Bold" Foreground="#0d47a1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Working feed (G01, G02, G03)" FontSize="10" Foreground="#555" TextWrapping="Wrap" Width="130"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBox x:Name="TbG01Speed" Text="300" Width="55" Height="22"/>
+                                                <TextBlock Text=" mm/min" VerticalAlignment="Center" FontSize="10" Foreground="#555"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
 
-                                <!-- Cooling -->
-                                <TreeViewItem Header="Cooling Output Ports M7, M8, M9" IsExpanded="True"
-                                              FontWeight="SemiBold">
-                                    <TreeViewItem Header="">
-                                        <TreeViewItem.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200"/>
-                                                        <ColumnDefinition Width="80"/>
-                                                        <ColumnDefinition Width="60"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="Enable cooling" FontStyle="Italic"/>
-                                                    <TextBox Grid.Column="1" Text="3" Margin="2,1" Height="20"/>
-                                                    <CheckBox Grid.Column="2" Margin="4,0"/>
-                                                    <TextBlock Grid.Column="3" Text="M8" Foreground="#666"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </TreeViewItem.HeaderTemplate>
-                                    </TreeViewItem>
-                                    <TreeViewItem Header="">
-                                        <TreeViewItem.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="200"/>
-                                                        <ColumnDefinition Width="80"/>
-                                                        <ColumnDefinition Width="60"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="Mist coolant" FontStyle="Italic"/>
-                                                    <TextBox Grid.Column="1" Text="4" Margin="2,1" Height="20"/>
-                                                    <CheckBox Grid.Column="2" Margin="4,0"/>
-                                                    <TextBlock Grid.Column="3" Text="M7" Foreground="#666"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </TreeViewItem.HeaderTemplate>
-                                    </TreeViewItem>
-                                </TreeViewItem>
+                            <GroupBox Header="Optimization" Margin="0,6,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <Border Width="32" Height="32" Background="#f3e5f5" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="~" FontSize="18" FontWeight="Bold" Foreground="#6a1b9a" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <CheckBox Content="Use anti-aliasing" x:Name="ChkAntiAlias"/>
+                                            <TextBlock Text="When moving on bends, the" FontSize="9" Foreground="#666" TextWrapping="Wrap" Width="130" Margin="0,2,0,0"/>
+                                            <TextBlock Text="speed will decrease, for smoothing." FontSize="9" Foreground="#666" TextWrapping="Wrap" Width="130"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
 
-                                <!-- Output Control -->
-                                <TreeViewItem Header="Output Control M62, M63, M64, M65" IsExpanded="False"
-                                              FontWeight="SemiBold">
-                                    <TreeViewItem Header="Output port 0 — M62 P0 / M64 P0"/>
-                                    <TreeViewItem Header="Output port 1 — M62 P1 / M64 P1"/>
-                                    <TreeViewItem Header="Output port 2 — M62 P2 / M64 P2"/>
-                                </TreeViewItem>
+                            <GroupBox Header="Find Tool Zero" Margin="0,6,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="32" Height="32" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="↓" FontSize="18" FontWeight="Bold" Foreground="#e65100" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Find tool down speed" FontSize="10" Foreground="#555"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBox x:Name="TbToolDownSpeed" Text="100" Width="50" Height="22"/>
+                                                <TextBlock Text=" mm/min" VerticalAlignment="Center" FontSize="10" Foreground="#555"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <Border Width="32" Height="32" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="↑" FontSize="18" FontWeight="Bold" Foreground="#2e7d32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Find tool up speed" FontSize="10" Foreground="#555"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBox x:Name="TbToolUpSpeed" Text="50" Width="50" Height="22"/>
+                                                <TextBlock Text=" mm/min" VerticalAlignment="Center" FontSize="10" Foreground="#555"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
 
-                                <!-- Enable axles -->
-                                <TreeViewItem Header="Enable axles Output Ports" IsExpanded="False"
-                                              FontWeight="SemiBold">
-                                    <TreeViewItem Header="Enable X axle"/>
-                                    <TreeViewItem Header="Enable Y axle"/>
-                                    <TreeViewItem Header="Enable Z axle"/>
-                                    <TreeViewItem Header="Enable A axle"/>
-                                </TreeViewItem>
-                            </TreeView>
-                        </Border>
+                        <!-- Col 2: Display Colors + Grid + Zoom -->
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <GroupBox Header="Model Display Colors">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="24"/><RowDefinition Height="24"/>
+                                        <RowDefinition Height="24"/><RowDefinition Height="24"/>
+                                        <RowDefinition Height="24"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#222" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="Background color" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="White" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="Selected line color" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#f48fb1" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="G00 when Z&gt;0" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#888" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="Grid color" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#ff5722" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="G00 when Z&lt;0" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#aaa" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="Grid color for 100" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#7b1fa2" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="G01 when Z&gt;0" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#ff9800" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="Machine limits color" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="20" Height="16" Background="#1565c0" BorderBrush="#888" BorderThickness="1" Margin="0,0,4,0" Cursor="Hand"/>
+                                        <TextBlock Text="G01 when Z&lt;0" VerticalAlignment="Center" FontSize="10"/>
+                                    </StackPanel>
+                                    <Button Grid.Row="4" Grid.Column="1" Content="Set default colors" FontSize="10" Height="20" Padding="2,0"/>
+                                </Grid>
+                            </GroupBox>
 
-                        <Grid Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="80"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Content="The period of scanning coordinates:"/>
-                            <TextBox Grid.Column="1" x:Name="TbScanPeriod" Text="20" Margin="4,0,0,0"/>
-                        </Grid>
-                    </StackPanel>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="110"/>
+                                </Grid.ColumnDefinitions>
+
+                                <GroupBox Header="Model Grid" Grid.Column="0" Margin="0,0,4,0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="22"/><RowDefinition Height="22"/>
+                                            <RowDefinition Height="22"/><RowDefinition Height="22"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="65"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Row="0" Grid.ColumnSpan="2" Content="Show grid" IsChecked="True" x:Name="ChkShowGrid"/>
+                                        <CheckBox Grid.Row="1" Grid.ColumnSpan="2" Content="Machine limits" IsChecked="True" x:Name="ChkMachineLimits"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Grid step:" VerticalAlignment="Center" FontSize="10"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbGridStep" Text="10" Height="20" Margin="2,1"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Grid width, mm:" VerticalAlignment="Center" FontSize="10"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbGridWidth" Text="300" Height="20" Margin="2,1"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <GroupBox Header="Model Zoom" Grid.Column="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="22"/><RowDefinition Height="22"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Text="W:" VerticalAlignment="Center" FontSize="10"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Text="100" Height="20" Margin="2,1"/>
+                                        <TextBlock Grid.Row="1" Text="H:" VerticalAlignment="Center" FontSize="10"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Text="100" Height="20" Margin="2,1"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Col 3: Quick navigation -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Device controller" FontWeight="SemiBold" FontSize="11" Margin="0,4,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#e3f2fd" BorderBrush="#90caf9" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="🖧" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Choice of CNC controller and its configuration." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavDevice_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Axes settings" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#f3e5f5" BorderBrush="#ce93d8" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="↔" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Configuration of axes, acceleration, direction, slave axis." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavAxes_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Input ports" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#ffebee" BorderBrush="#ef9a9a" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="→" FontSize="16" Foreground="#c62828" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Setting up an emergency stop, manual control, limits, probe." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavInput_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Output ports" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#e8f5e9" BorderBrush="#a5d6a7" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="→" FontSize="16" Foreground="#2e7d32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Configure the ports for controlling the spindle, cooling, tool change." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavOutput_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Spindle" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#fff8e1" BorderBrush="#ffe082" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="⚡" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Spindle adjustment, speed, acceleration, direction of rotation." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavSpindle_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Machine size" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#e0f2f1" BorderBrush="#80cbc4" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="📐" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Machine size, soft limits, home function." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavMachine_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Tools" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#fce4ec" BorderBrush="#f48fb1" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="🔧" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Tool command settings, automatical tool change." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavTools_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
                 </ScrollViewer>
             </TabItem>
 
-            <!-- ═══════════ TAB: Device controller ═══════════ -->
-            <TabItem Header="Device controller" Tag="🖧">
-                <DockPanel Margin="10" Background="White">
-                    <Grid DockPanel.Dock="Top" Margin="0,0,0,6">
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Device controller                                      -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Device controller">
+                <TabItem.Tag>
+                    <TextBlock Text="🖧" FontSize="18"/>
+                </TabItem.Tag>
+                <DockPanel Margin="8" Background="White">
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Devices:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        <TextBlock Text="Devices:" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="1" Content="Automatic selection of supported device"
                                   x:Name="ChkAutoDevice" IsChecked="True"
-                                  VerticalAlignment="Center" Margin="8,0"/>
-                        <Button Grid.Column="2" Content="🔄 Refresh" Width="80"
-                                Click="BtnRefreshDevices_Click" Padding="4,2"/>
+                                  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Button Grid.Column="2" Click="BtnRefreshDevices_Click" Padding="6,2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔄" FontSize="14" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Refresh" FontSize="11" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </Grid>
 
                     <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="80"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="The period of scanning coordinates:"/>
-                        <TextBox Grid.Column="1" x:Name="TbScanPeriod2" Text="20" Margin="4,0,0,0"/>
+                        <Label Content="The period of scanning coordinates:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="TbScanPeriod" Text="20" Margin="4,0,0,0"/>
                     </Grid>
 
-                    <!-- Lista de dispositivos USB -->
-                    <DataGrid x:Name="DeviceGrid" Margin="0,4" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid x:Name="DeviceGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserAddRows="False" SelectionMode="Single" FontSize="11"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#e0e0e0"
+                              Background="White" RowHeight="22">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name"          Width="120" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Manufacturer"  Width="100" Binding="{Binding Manufacturer}"/>
-                            <DataGridTextColumn Header="VID"           Width="50"  Binding="{Binding VID}"/>
-                            <DataGridTextColumn Header="PID"           Width="50"  Binding="{Binding PID}"/>
-                            <DataGridTextColumn Header="Version"       Width="55"  Binding="{Binding Version}"/>
-                            <DataGridTextColumn Header="Serial number" Width="100" Binding="{Binding Serial}"/>
-                            <DataGridTextColumn Header="Outp."         Width="45"  Binding="{Binding Outputs}"/>
-                            <DataGridTextColumn Header="Input."        Width="45"  Binding="{Binding Inputs}"/>
+                            <DataGridTextColumn Header="Manufacturer"  Width="110" Binding="{Binding Manufacturer}"/>
+                            <DataGridTextColumn Header="VID"           Width="55"  Binding="{Binding VID}"/>
+                            <DataGridTextColumn Header="PID"           Width="55"  Binding="{Binding PID}"/>
+                            <DataGridTextColumn Header="Version"       Width="60"  Binding="{Binding Version}"/>
+                            <DataGridTextColumn Header="Serial number" Width="110" Binding="{Binding Serial}"/>
+                            <DataGridTextColumn Header="Outp..."       Width="50"  Binding="{Binding Outputs}"/>
+                            <DataGridTextColumn Header="Input..."      Width="50"  Binding="{Binding Inputs}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>
             </TabItem>
 
-            <!-- ═══════════ TAB: Axes settings ═══════════ -->
-            <TabItem Header="Axes settings" Tag="↔">
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Axes settings                                          -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Axes settings">
+                <TabItem.Tag>
+                    <TextBlock Text="↔" FontSize="18"/>
+                </TabItem.Tag>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <!-- Cabeçalho -->
-                        <Grid Margin="0,0,0,4">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30"/>
-                                <ColumnDefinition Width="90"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="75"/>
-                                <ColumnDefinition Width="75"/>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="60"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="" FontWeight="Bold" FontSize="10" Foreground="#555"/>
-                            <TextBlock Grid.Column="1" Text="Impulses/mm" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Text="Max (mm)" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="3" Text="Min (mm)" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="4" Text="Backlash mm" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="5" Text="Accel/min" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="6" Text="Step↕" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="7" Text="Dir↕" FontWeight="Bold" FontSize="10" Foreground="#555" HorizontalAlignment="Center"/>
-                        </Grid>
-                        <Separator Background="#ddd" Margin="0,2,0,4"/>
-
-                        <!-- Linhas de eixo -->
-                        <ItemsControl x:Name="AxesPanel">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Height="28" Margin="0,1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30"/>
-                                            <ColumnDefinition Width="90"/>
-                                            <ColumnDefinition Width="80"/>
-                                            <ColumnDefinition Width="80"/>
-                                            <ColumnDefinition Width="75"/>
-                                            <ColumnDefinition Width="75"/>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="60"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Name}" FontSize="16"
-                                                   FontWeight="Bold" Foreground="{Binding Color}"
-                                                   VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding Pulses}" Margin="2,2"/>
-                                        <TextBox Grid.Column="2" Text="{Binding Max}" Margin="2,2"/>
-                                        <TextBox Grid.Column="3" Text="{Binding Min}" Margin="2,2"/>
-                                        <TextBox Grid.Column="4" Text="{Binding Backlash}" Margin="2,2"/>
-                                        <TextBox Grid.Column="5" Text="{Binding Accel}" Margin="2,2"/>
-                                        <CheckBox Grid.Column="6" IsChecked="{Binding StepInv}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <CheckBox Grid.Column="7" IsChecked="{Binding DirInv}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ItemsControl x:Name="AxesPanel" Margin="6">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:AxisSettings}">
+                                <Border BorderBrush="#ddd" BorderThickness="0,0,0,1" Margin="0,0,0,2" Padding="0,3">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="28"/>
+                                        </Grid.RowDefinitions>
+                                        <!-- Header row -->
+                                        <TextBlock Grid.Row="0"
+                                                   Text="{Binding Name, StringFormat='Setting the axis {0}'}"
+                                                   FontSize="11" Foreground="#555" FontStyle="Italic"/>
+                                        <!-- Controls row -->
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <!-- Colored letter -->
+                                            <TextBlock Text="{Binding Name}" FontSize="22" FontWeight="Bold"
+                                                       Foreground="{Binding Color}"
+                                                       Width="30" VerticalAlignment="Center"/>
+                                            <!-- Enabled -->
+                                            <StackPanel VerticalAlignment="Center" Margin="2,0,8,0">
+                                                <CheckBox IsChecked="{Binding Enabled}" Content="Enabled" FontSize="10"/>
+                                            </StackPanel>
+                                            <!-- Impulses at 1 mm -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="Impulses at 1 mm" FontSize="9" Foreground="#555"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="18" Height="22" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" Margin="0,0,2,0">
+                                                        <TextBlock Text="⬛" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                                    </Border>
+                                                    <TextBox Text="{Binding Impulses}" Width="50" Height="22"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!-- Speed -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="Speed mm/min" FontSize="9" Foreground="#555"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="18" Height="22" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" Margin="0,0,2,0">
+                                                        <TextBlock Text="⚙" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#1565c0"/>
+                                                    </Border>
+                                                    <TextBox Text="{Binding Speed}" Width="55" Height="22"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!-- Acceleration -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="Acceleration mm/s²" FontSize="9" Foreground="#555"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="18" Height="22" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" Margin="0,0,2,0">
+                                                        <TextBlock Text="/" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#e65100"/>
+                                                    </Border>
+                                                    <TextBox Text="{Binding Accel}" Width="50" Height="22"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!-- Dir Invert -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,6,0">
+                                                <TextBlock Text="Invert direction" FontSize="9" Foreground="#555"/>
+                                                <ToggleButton IsChecked="{Binding DirInvert}" Height="22" Padding="4,0"
+                                                              Background="#e8f5e9" BorderBrush="#aaa">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="⇄" FontSize="12" Margin="0,0,3,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Dir Invert" FontSize="10" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </ToggleButton>
+                                            </StackPanel>
+                                            <!-- Step Invert -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="Invert step" FontSize="9" Foreground="#555"/>
+                                                <ToggleButton IsChecked="{Binding StepInvert}" Height="22" Padding="4,0"
+                                                              Background="#e3f2fd" BorderBrush="#aaa">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="⬡" FontSize="10" Margin="0,0,3,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Step Invert" FontSize="10" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </ToggleButton>
+                                            </StackPanel>
+                                            <!-- Backlash -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="Backlash mm" FontSize="9" Foreground="#555"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox IsChecked="{Binding Slave}" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                                    <TextBox Text="{Binding Backlash}" Width="40" Height="22"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <!-- Slave -->
+                                            <StackPanel VerticalAlignment="Center" Margin="0,0,6,0">
+                                                <TextBlock Text="Slave axis" FontSize="9" Foreground="#555"/>
+                                                <CheckBox IsChecked="{Binding Slave}" FontSize="10"/>
+                                            </StackPanel>
+                                            <!-- Remap motor -->
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="Remap motor" FontSize="9" Foreground="#555"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="18" Height="22" Background="#fce4ec" BorderBrush="#aaa" BorderThickness="1" Margin="0,0,2,0">
+                                                        <TextBlock Text="⊞" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#880e4f"/>
+                                                    </Border>
+                                                    <ComboBox Width="70" Height="22">
+                                                        <ComboBoxItem Content="Motor X"/>
+                                                        <ComboBoxItem Content="Motor Y"/>
+                                                        <ComboBoxItem Content="Motor Z"/>
+                                                        <ComboBoxItem Content="Motor A"/>
+                                                    </ComboBox>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Input Ports                                            -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Input Ports">
+                <TabItem.Tag>
+                    <Border Width="24" Height="22" Background="#c62828" CornerRadius="3">
+                        <TextBlock Text="→" Foreground="White" FontSize="14" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </TabItem.Tag>
+                <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="240"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: TreeView -->
+                    <DockPanel Grid.Column="0">
+                        <!-- Header -->
+                        <Grid DockPanel.Dock="Top" Background="#f5f5f5" Height="22">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Name" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center" Margin="22,0,0,0"/>
+                            <TextBlock Grid.Column="1" Text="Port number" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="Invert" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="3" Text="Status" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="4" Text="Hot Key" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TreeView x:Name="InputPortsTree" BorderThickness="0" Background="White" FontSize="11">
+                                <!-- Groups populated in code-behind -->
+                            </TreeView>
+                        </ScrollViewer>
+                    </DockPanel>
+
+                    <!-- Right: Hotkeys + Diagnostics -->
+                    <Border Grid.Column="1" BorderBrush="#ddd" BorderThickness="1,0,0,0" Background="#fafafa">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Hotkey settings" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6"/>
+                            <!-- Ctrl+A display -->
+                            <Border Background="White" BorderBrush="#bbb" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="0,0,0,6">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="Ctrl + " FontSize="18" FontWeight="Bold" Foreground="#333"/>
+                                    <TextBlock Text="A" FontSize="22" FontWeight="Bold" Foreground="#1565c0"/>
+                                </StackPanel>
+                            </Border>
+                            <CheckBox Content="Use default keys" x:Name="ChkDefaultKeys" IsChecked="True" Margin="0,2"/>
+                            <CheckBox Content="Use global hotkeys" x:Name="ChkGlobalHotkeys" Margin="0,2"/>
+
+                            <!-- Keyboard image placeholder -->
+                            <Border Background="#e8e8e8" BorderBrush="#bbb" BorderThickness="1"
+                                    Height="60" Margin="0,8" CornerRadius="4">
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="⌨" FontSize="28" HorizontalAlignment="Center" Foreground="#666"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="Input port diagnostics" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,4"/>
+                            <!-- In0-In31 grid -->
+                            <ItemsControl x:Name="DiagnosticsGrid">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="1">
+                                            <TextBlock Text="{Binding Label}" FontSize="9" Width="28" VerticalAlignment="Center"/>
+                                            <Border Width="14" Height="12" Background="{Binding Color}" CornerRadius="1"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock Text="Inactive" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                <Border Width="14" Height="12" Background="#e53935" CornerRadius="1" Margin="0,0,8,0"/>
+                                <TextBlock Text="Active" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                <Border Width="14" Height="12" Background="#4caf50" CornerRadius="1"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Output Ports                                           -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Output Ports">
+                <TabItem.Tag>
+                    <Border Width="24" Height="22" Background="#2e7d32" CornerRadius="3">
+                        <TextBlock Text="→" Foreground="White" FontSize="14" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </TabItem.Tag>
+                <DockPanel Background="White">
+                    <!-- Header -->
+                    <Grid DockPanel.Dock="Top" Background="#f5f5f5" Height="22">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="185"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Name" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center" Margin="22,0,0,0"/>
+                        <TextBlock Grid.Column="1" Text="Port number" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Text="Invert" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="Status" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TreeView x:Name="OutputPortsTree" BorderThickness="0" Background="White" FontSize="11"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Spindle                                                -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Spindle">
+                <TabItem.Tag>
+                    <TextBlock Text="⚡" FontSize="18" Foreground="#f57f17"/>
+                </TabItem.Tag>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
+                    <StackPanel Margin="8">
+                        <!-- Top row: 3 panels -->
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Spindle specifications -->
+                            <GroupBox Grid.Column="0" Header="Spindle specifications" Margin="0,0,4,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <Border Width="30" Height="30" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="RPM" FontSize="9" FontWeight="Bold" Foreground="#c62828" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Spindle speed (rpm)" FontSize="10" Foreground="#555"/>
+                                            <TextBox x:Name="TbSpRpm" Text="20000" Width="70" Height="22" Margin="0,2"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <Border Width="30" Height="30" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="ACC" FontSize="9" FontWeight="Bold" Foreground="#2e7d32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <CheckBox Content="Use acceleration (rpm/10ms)" x:Name="ChkSpAccel" FontSize="10"/>
+                                            <TextBox x:Name="TbSpAccel" Text="50" Width="70" Height="22" Margin="0,2"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Direction -->
+                            <GroupBox Grid.Column="1" Header="Direction of rotation of the spindle" Margin="0,0,4,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6">
+                                        <Border Width="30" Height="30" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="15" Margin="0,0,8,0">
+                                            <TextBlock Text="↺" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                        </Border>
+                                        <RadioButton x:Name="RbCCW" Content="Counterclockwise, CCW" IsChecked="True" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6">
+                                        <Border Width="30" Height="30" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="15" Margin="0,0,8,0">
+                                            <TextBlock Text="↻" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#c62828"/>
+                                        </Border>
+                                        <RadioButton x:Name="RbCW"  Content="Clockwise, CW" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- PWM port -->
+                            <GroupBox Grid.Column="2" Header="PWM port from Axis">
+                                <StackPanel>
+                                    <CheckBox Content="Use axis for PWM signal" x:Name="ChkUsePwm" Margin="0,4"/>
+                                    <TextBlock Text="STEP signal for frequency" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    <TextBlock Text="DIR signal for on / off" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6">
+                                        <Border Width="30" Height="30" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="≡" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#1565c0"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="PWM frequency, Hz" FontSize="10" Foreground="#555"/>
+                                            <TextBox x:Name="TbPwmFreq" Text="5000" Width="70" Height="22"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock Text="Axis for PWM" FontSize="10" Foreground="#555"/>
+                                            <ComboBox x:Name="CmbPwmAxis" Width="60" Height="22">
+                                                <ComboBoxItem Content="C" IsSelected="True"/>
+                                                <ComboBoxItem Content="A"/>
+                                                <ComboBoxItem Content="B"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </Grid>
+
+                        <!-- Middle row: coefficient + invert -->
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="Spindle coefficient" Margin="0,0,4,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <Border Width="30" Height="30" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="×" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#e65100"/>
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="Output signal (0.0 - 1.0)" FontSize="10" Foreground="#555"/>
+                                            <TextBox x:Name="TbSpSignal" Text="1" Width="55" Height="22" Margin="0,2"/>
+                                            <TextBlock Text="Speed signal multiplier" FontSize="10" Foreground="#555"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="Invert output" Margin="0,0,4,0">
+                                <StackPanel Margin="0,4">
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <Border Width="30" Height="30" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,6,0">
+                                            <TextBlock Text="⇅" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <CheckBox Content="Invert output signal" x:Name="ChkSpInvOut" FontSize="10"/>
+                                            <TextBlock Text="Invert 0-10V output" FontSize="10" Foreground="#555" Margin="0,4"/>
+                                            <TextBlock Text='use "0 to 10" or "10 to 0"' FontSize="10" Foreground="#555"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </Grid>
+
+                        <!-- Spindle control output ports (4 items in 2x2) -->
+                        <GroupBox Header="Spindle control output ports">
+                            <UniformGrid Columns="2" Margin="4">
+                                <!-- Turn the spindle -->
+                                <Border BorderBrush="#ddd" BorderThickness="1" Margin="2" Padding="6">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border Width="28" Height="28" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="14" Margin="0,0,6,0">
+                                                <TextBlock Text="ON" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                            </Border>
+                                            <TextBlock Text="Turn the spindle" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <CheckBox Content="Use port number" x:Name="ChkSpOn" FontSize="10"/>
+                                            <TextBox x:Name="TbSpOnPort" Text="0" Width="35" Height="20" Margin="4,0"/>
+                                            <Border Style="{StaticResource StatusIndicator}" Margin="4,0"/>
+                                        </StackPanel>
+                                        <CheckBox Content="Invert signal" x:Name="ChkSpOnInv" FontSize="10" Margin="0,2"/>
+                                        <TextBlock Text="Status ————" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    </StackPanel>
+                                </Border>
+                                <!-- Spindle CW -->
+                                <Border BorderBrush="#ddd" BorderThickness="1" Margin="2" Padding="6">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border Width="28" Height="28" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="14" Margin="0,0,6,0">
+                                                <TextBlock Text="CW" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#c62828"/>
+                                            </Border>
+                                            <TextBlock Text="Spindle CW clockwise" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <CheckBox Content="Use port number" x:Name="ChkSpCw" FontSize="10"/>
+                                            <TextBox x:Name="TbSpCwPort" Text="0" Width="35" Height="20" Margin="4,0"/>
+                                            <Border Style="{StaticResource StatusIndicator}" Margin="4,0"/>
+                                        </StackPanel>
+                                        <CheckBox Content="Invert signal" x:Name="ChkSpCwInv" FontSize="10" Margin="0,2"/>
+                                        <TextBlock Text="Status ————" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    </StackPanel>
+                                </Border>
+                                <!-- Cooling -->
+                                <Border BorderBrush="#ddd" BorderThickness="1" Margin="2" Padding="6">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border Width="28" Height="28" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="14" Margin="0,0,6,0">
+                                                <TextBlock Text="≋" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#1565c0"/>
+                                            </Border>
+                                            <TextBlock Text="Cooling" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <CheckBox Content="Use port number" x:Name="ChkCooling" FontSize="10"/>
+                                            <TextBox x:Name="TbCoolingPort" Text="0" Width="35" Height="20" Margin="4,0"/>
+                                            <Border Style="{StaticResource StatusIndicator}" Margin="4,0"/>
+                                        </StackPanel>
+                                        <CheckBox Content="Invert signal" x:Name="ChkCoolingInv" FontSize="10" Margin="0,2"/>
+                                        <TextBlock Text="Status ————" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    </StackPanel>
+                                </Border>
+                                <!-- Spindle CCW -->
+                                <Border BorderBrush="#ddd" BorderThickness="1" Margin="2" Padding="6">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border Width="28" Height="28" Background="#f3e5f5" BorderBrush="#aaa" BorderThickness="1" CornerRadius="14" Margin="0,0,6,0">
+                                                <TextBlock Text="CCW" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#6a1b9a"/>
+                                            </Border>
+                                            <TextBlock Text="Spindle CCW counterclockwise" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <CheckBox Content="Use port number" x:Name="ChkSpCcw" FontSize="10"/>
+                                            <TextBox x:Name="TbSpCcwPort" Text="0" Width="35" Height="20" Margin="4,0"/>
+                                            <Border Style="{StaticResource StatusIndicator}" Margin="4,0"/>
+                                        </StackPanel>
+                                        <CheckBox Content="Invert signal" x:Name="ChkSpCcwInv" FontSize="10" Margin="0,2"/>
+                                        <TextBlock Text="Status ————" FontSize="10" Foreground="#555" Margin="0,2"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Machine size                                           -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Machine size">
+                <TabItem.Tag>
+                    <TextBlock Text="📐" FontSize="18"/>
+                </TabItem.Tag>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
+                    <ItemsControl x:Name="MachineSizePanel" Margin="4">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:AxisSettings}">
+                                <Border BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Margin="0,2" Padding="0,4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="165"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Size axis -->
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" FontSize="36" FontWeight="Bold"
+                                                       Foreground="{Binding Color}" Width="44" VerticalAlignment="Center"/>
+                                            <StackPanel VerticalAlignment="Center" Margin="4,0,0,0">
+                                                <TextBlock Text="{Binding Name, StringFormat='Size axis {0}'}"
+                                                           FontSize="11" Foreground="#555"/>
+                                                <Grid Margin="0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="55"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/><RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                                        <Border Width="16" Height="16" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,2,0">
+                                                            <TextBlock Text="←" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                                        </Border>
+                                                        <TextBlock Text=" min, mm" FontSize="9" Foreground="#555" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AxMin}" Height="20" Margin="2,1"/>
+                                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                                        <Border Width="16" Height="16" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,2,0">
+                                                            <TextBlock Text="→" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#c62828"/>
+                                                        </Border>
+                                                        <TextBlock Text=" max, mm" FontSize="9" Foreground="#555" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AxMax}" Height="20" Margin="2,1"/>
+                                                </Grid>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Soft Limit -->
+                                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name, StringFormat='Soft Limit for {0} axis'}"
+                                                       FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                                            <TextBlock Text="Use for" FontSize="10" Foreground="#777"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <Border Width="20" Height="20" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
+                                                    <TextBlock Text="🛡" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <CheckBox Content="Min" IsChecked="{Binding SoftMin}" FontSize="10" Margin="0,0,8,0"/>
+                                                <Border Width="20" Height="20" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
+                                                    <TextBlock Text="🛡" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <CheckBox Content="Max" IsChecked="{Binding SoftMax}" FontSize="10"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4">
+                                                <Border Width="20" Height="20" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,4,0">
+                                                    <TextBlock Text="⚙" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="Safe, slow, mm" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                <TextBox Text="{Binding SafeSlow}" Width="45" Height="20"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Home function -->
+                                        <StackPanel Grid.Column="2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name, StringFormat='Home {0}-axis function'}"
+                                                       FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                <TextBlock Text="Home direction" FontSize="10" Foreground="#777" VerticalAlignment="Center" Width="85"/>
+                                                <Border Width="16" Height="16" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,3,0">
+                                                    <TextBlock Text="←" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                                </Border>
+                                                <CheckBox Content="To min" IsChecked="{Binding HomeToMin}" FontSize="10" Margin="0,0,8,0"/>
+                                                <Border Width="16" Height="16" Background="#ffebee" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,3,0">
+                                                    <TextBlock Text="→" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#c62828"/>
+                                                </Border>
+                                                <CheckBox Content="To max" IsChecked="{Binding HomeToMax}" FontSize="10"/>
+                                            </StackPanel>
+                                            <Grid Margin="0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="85"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Home order" FontSize="10" Foreground="#777"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="20" Height="20" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,2,0">
+                                                            <TextBlock Text="↕" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                                        </Border>
+                                                        <TextBox Text="{Binding HomeOrder}" Width="35" Height="20"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="Speed, mm/min" FontSize="10" Foreground="#777"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="20" Height="20" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,2,0">
+                                                            <TextBlock Text="⚙" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <TextBox Text="{Binding HomeSpeed}" Width="45" Height="20"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Return, mm/min" FontSize="10" Foreground="#777"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="20" Height="20" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,2,0">
+                                                            <TextBlock Text="↩" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <TextBox Text="{Binding HomeReturn}" Width="45" Height="20"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Tools                                                  -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Tools">
+                <TabItem.Tag>
+                    <TextBlock Text="🔧" FontSize="18"/>
+                </TabItem.Tag>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
+                    <StackPanel Margin="8">
+                        <!-- Tool rows T1, T2, T3 -->
+                        <ItemsControl x:Name="ToolsPanel">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:ToolEntry}">
+                                    <Border BorderBrush="#ddd" BorderThickness="1" Margin="0,2" Padding="6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Tool label + Height + Width -->
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Number, StringFormat='Tool T{0}'}"
+                                                           FontSize="11" Foreground="#555" Margin="0,0,0,2"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Number, StringFormat='T{0}'}"
+                                                               FontSize="28" FontWeight="Bold" Foreground="#333"
+                                                               Width="38" VerticalAlignment="Center"/>
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal" Margin="0,1">
+                                                            <Border Width="16" Height="16" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,3,0">
+                                                                <TextBlock Text="↕" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <TextBlock Text="Height" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                                                            <TextBox Text="{Binding Height}" Width="40" Height="18"/>
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Margin="0,1">
+                                                            <Border Width="16" Height="16" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="1" Margin="0,0,3,0">
+                                                                <TextBlock Text="↔" FontSize="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <TextBlock Text="Width" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                                                            <TextBox Text="{Binding Width}" Width="40" Height="18"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <!-- Position checkboxes -->
+                                            <UniformGrid Grid.Column="1" Columns="6" Margin="8,0,0,0">
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseX}" FontSize="10">
+                                                        <TextBlock Text="Use X position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosX}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseY}" FontSize="10">
+                                                        <TextBlock Text="Use Y position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosY}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseZ}" FontSize="10">
+                                                        <TextBlock Text="Use Z position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosZ}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseA}" FontSize="10">
+                                                        <TextBlock Text="Use A position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosA}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseB}" FontSize="10">
+                                                        <TextBlock Text="Use B position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosB}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Margin="2">
+                                                    <CheckBox IsChecked="{Binding UseC}" FontSize="10">
+                                                        <TextBlock Text="Use C position" FontSize="10"/>
+                                                    </CheckBox>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="14" Width="16" VerticalAlignment="Center"/>
+                                                        <TextBox Text="{Binding PosC}" Width="40" Height="18"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </UniformGrid>
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
 
-            <!-- ═══════════ TAB: Input Ports ═══════════ -->
-            <TabItem Header="Input Ports" Tag="→">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <DataGrid x:Name="InputPortsGrid" AutoGenerateColumns="False"
-                                  IsReadOnly="False" MinHeight="200">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="160" Binding="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Port number" Width="80" Binding="{Binding Port}"/>
-                                <DataGridCheckBoxColumn Header="Invert" Width="55" Binding="{Binding Invert}"/>
-                                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Desc}" IsReadOnly="True"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Separator Margin="0,8"/>
-                        <CheckBox Content="Enable hard limits (alarm on trigger)" x:Name="ChkHardLimits" Margin="0,4"/>
-                        <CheckBox Content="Input port diagnostics on startup" x:Name="ChkInputDiag" Margin="0,4"/>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
+                        <!-- Tool change setting + positions -->
+                        <Grid Margin="0,6,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-            <!-- ═══════════ TAB: Output Ports ═══════════ -->
-            <TabItem Header="Output Ports" Tag="←">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <DataGrid x:Name="OutputPortsGrid" AutoGenerateColumns="False"
-                                  IsReadOnly="False" MinHeight="200">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="160" Binding="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Port number" Width="80" Binding="{Binding Port}"/>
-                                <DataGridCheckBoxColumn Header="Invert" Width="55" Binding="{Binding Invert}"/>
-                                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Desc}" IsReadOnly="True"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
+                            <!-- Tool change setting -->
+                            <GroupBox Grid.Column="0" Header="Tool change setting" Margin="0,0,6,0">
+                                <StackPanel Margin="2">
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="20" Height="20" Background="#e8f5e9" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,4,0">
+                                            <TextBlock Text="🔄" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <CheckBox Content="Use ATC" x:Name="ChkATC" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Number of tools:" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                        <TextBox x:Name="TbNumTools" Text="10" Width="40" Height="20"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="20" Height="20" Background="#e3f2fd" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,4,0">
+                                            <TextBlock Text="↑" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <CheckBox Content="Move to maximum Z in G-Code" x:Name="ChkMaxZ" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="20" Height="20" Background="#fff3e0" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,4,0">
+                                            <TextBlock Text="↕" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <CheckBox Content="Move to safe Z" x:Name="ChkMoveZ" FontSize="10"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border Width="20" Height="20" Background="#fce4ec" BorderBrush="#aaa" BorderThickness="1" CornerRadius="2" Margin="0,0,4,0">
+                                            <TextBlock Text="⏸" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <CheckBox Content="Pause execution G-Code file" x:Name="ChkPauseGcode" FontSize="10"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
 
-            <!-- ═══════════ TAB: Spindle ═══════════ -->
-            <TabItem Header="Spindle" Tag="⚡">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <GroupBox Header="Spindle specifications">
-                            <Grid Margin="4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="180"/><ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="28"/><RowDefinition Height="28"/>
-                                    <RowDefinition Height="28"/><RowDefinition Height="28"/>
-                                    <RowDefinition Height="28"/><RowDefinition Height="28"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Content="Max spindle speed (rpm):"/>
-                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TbSpMax" Text="24000" Margin="2"/>
-                                <Label Grid.Row="1" Content="Min spindle speed (rpm):"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbSpMin" Text="0" Margin="2"/>
-                                <Label Grid.Row="2" Content="PWM frequency (Hz):"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbPwmFreq" Text="1000" Margin="2"/>
-                                <Label Grid.Row="3" Content="Spindle coefficient:"/>
-                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbSpCoeff" Text="1.0" Margin="2"/>
-                                <Label Grid.Row="4" Content="Axis for PWM signal:"/>
-                                <ComboBox Grid.Row="4" Grid.Column="1" x:Name="CmbPwmAxis" Margin="2">
-                                    <ComboBoxItem Content="Z axis" IsSelected="True"/>
-                                    <ComboBoxItem Content="A axis"/>
-                                    <ComboBoxItem Content="Disabled"/>
-                                </ComboBox>
-                                <Label Grid.Row="5" Content="Speed signal multiplier:"/>
-                                <TextBox Grid.Row="5" Grid.Column="1" x:Name="TbSpeedMult" Text="1.0" Margin="2"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Spindle control">
-                            <StackPanel Margin="4">
-                                <CheckBox Content="Turn on/off the spindle (M3/M4/M5)" IsChecked="True" x:Name="ChkSpEnable" Margin="0,3"/>
-                                <CheckBox Content="Direction of rotation of the spindle" x:Name="ChkSpDir" Margin="0,3"/>
-                                <CheckBox Content="Use acceleration (rpm/10ms)" x:Name="ChkSpAccel" Margin="0,3"/>
-                                <CheckBox Content="Invert output signal" x:Name="ChkSpInvOut" Margin="0,3"/>
-                                <CheckBox Content="Invert 0-10V output" x:Name="ChkSp010" Margin="0,3"/>
-                                <CheckBox Content="DIR signal for on / off" x:Name="ChkSpDirOnOff" Margin="0,3"/>
+                            <!-- Tool change position + Tool height position -->
+                            <StackPanel Grid.Column="1">
+                                <GroupBox Header="Tool change position" Margin="0,0,0,4">
+                                    <StackPanel>
+                                        <CheckBox Content="Move to tool change position" x:Name="ChkMoveToChange" FontSize="10" Margin="0,2"/>
+                                        <UniformGrid Columns="6" Margin="0,4">
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use X position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use Y position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use Z position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use A position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use B position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use C position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </GroupBox>
+                                <GroupBox Header="Tool height position">
+                                    <StackPanel>
+                                        <CheckBox Content="Use tool height" x:Name="ChkUseToolHeight" FontSize="10" Margin="0,2"/>
+                                        <UniformGrid Columns="6" Margin="0,4">
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use X position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use Y position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use Z position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use A position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use B position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                            <StackPanel Margin="2"><CheckBox FontSize="10"><TextBlock Text="Use C position" FontSize="10"/></CheckBox><StackPanel Orientation="Horizontal"><TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="12" Width="14" VerticalAlignment="Center"/><TextBox Text="0" Width="36" Height="18"/></StackPanel></StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </GroupBox>
                             </StackPanel>
-                        </GroupBox>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- ═══════════ TAB: Machine size ═══════════ -->
-            <TabItem Header="Machine size" Tag="📐">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <GroupBox Header="Machine size, soft limits, home function.">
-                            <Grid Margin="4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130"/><ColumnDefinition Width="90"/>
-                                    <ColumnDefinition Width="90"/><ColumnDefinition Width="90"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-
-                                <Label Grid.Row="0" Grid.Column="1" Content="Min (mm)" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                <Label Grid.Row="0" Grid.Column="2" Content="Max (mm)" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                <Label Grid.Row="0" Grid.Column="3" Content="Home dir" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-
-                                <Label Grid.Row="1" Content="X axis:" Foreground="#e53935"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbXSoftMin" Text="0" Margin="2"/>
-                                <TextBox Grid.Row="1" Grid.Column="2" x:Name="TbXSoftMax" Text="200" Margin="2"/>
-                                <ComboBox Grid.Row="1" Grid.Column="3" Margin="2">
-                                    <ComboBoxItem Content="Min (-)"/>
-                                    <ComboBoxItem Content="Max (+)" IsSelected="True"/>
-                                </ComboBox>
-
-                                <Label Grid.Row="2" Content="Y axis:" Foreground="#fdd835"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbYSoftMin" Text="0" Margin="2"/>
-                                <TextBox Grid.Row="2" Grid.Column="2" x:Name="TbYSoftMax" Text="200" Margin="2"/>
-                                <ComboBox Grid.Row="2" Grid.Column="3" Margin="2">
-                                    <ComboBoxItem Content="Min (-)"/>
-                                    <ComboBoxItem Content="Max (+)" IsSelected="True"/>
-                                </ComboBox>
-
-                                <Label Grid.Row="3" Content="Z axis:" Foreground="#1e88e5"/>
-                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbZSoftMin" Text="-100" Margin="2"/>
-                                <TextBox Grid.Row="3" Grid.Column="2" x:Name="TbZSoftMax" Text="0" Margin="2"/>
-                                <ComboBox Grid.Row="3" Grid.Column="3" Margin="2">
-                                    <ComboBoxItem Content="Min (-)" IsSelected="True"/>
-                                    <ComboBoxItem Content="Max (+)"/>
-                                </ComboBox>
-
-                                <Label Grid.Row="4" Content="A axis:" Foreground="#ab47bc"/>
-                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TbASoftMin" Text="0" Margin="2"/>
-                                <TextBox Grid.Row="4" Grid.Column="2" x:Name="TbASoftMax" Text="360" Margin="2"/>
-                                <ComboBox Grid.Row="4" Grid.Column="3" Margin="2">
-                                    <ComboBoxItem Content="Min (-)"/>
-                                    <ComboBoxItem Content="Max (+)" IsSelected="True"/>
-                                </ComboBox>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Home functions">
-                            <Grid Margin="4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="180"/><ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Content="Homing order:"/>
-                                <ComboBox Grid.Row="0" Grid.Column="1" Margin="2">
-                                    <ComboBoxItem Content="Z → X → Y" IsSelected="True"/>
-                                    <ComboBoxItem Content="X → Y → Z"/>
-                                    <ComboBoxItem Content="All simultaneous"/>
-                                </ComboBox>
-                                <Label Grid.Row="1" Content="Seek speed (mm/min):"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbHomeSeek" Text="800" Margin="2"/>
-                                <Label Grid.Row="2" Content="Feed speed (mm/min):"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbHomeFeed" Text="100" Margin="2"/>
-                                <Label Grid.Row="3" Content="Pull-off (mm):"/>
-                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbPulloff" Text="1" Margin="2"/>
-                                <Label Grid.Row="4" Content="Safe Z (mm):"/>
-                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TbSafeZ" Text="-2" Margin="2"/>
-                            </Grid>
-                        </GroupBox>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- ═══════════ TAB: Tools ═══════════ -->
-            <TabItem Header="Tools" Tag="🔧">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
-                    <StackPanel Margin="10">
-                        <GroupBox Header="Tool zero / probing">
-                            <Grid Margin="4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="180"/><ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Content="Find tool down speed (mm/min):"/>
-                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TbToolDown" Text="100" Margin="2"/>
-                                <Label Grid.Row="1" Content="Find tool up speed (mm/min):"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbToolUp" Text="500" Margin="2"/>
-                                <Label Grid.Row="2" Content="Safe, slow (mm):"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbToolSlow" Text="5" Margin="2"/>
-                                <Label Grid.Row="3" Content="Tool height position (mm):"/>
-                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbToolHeight" Text="0" Margin="2"/>
-                                <Label Grid.Row="4" Content="Laser beam diameter (mm):"/>
-                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TbLaserDiam" Text="0.1" Margin="2"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Tool change control">
-                            <Grid Margin="4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="180"/><ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                    <RowDefinition Height="26"/><RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Content="Number of tools:"/>
-                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TbNumTools" Text="1" Margin="2"/>
-                                <Label Grid.Row="1" Content="Tool change position X:"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbTcX" Text="0" Margin="2"/>
-                                <Label Grid.Row="2" Content="Tool change position Y:"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbTcY" Text="0" Margin="2"/>
-                                <Label Grid.Row="3" Content="Move speed to change pos:"/>
-                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbTcSpeed" Text="1000" Margin="2"/>
-                            </Grid>
-                        </GroupBox>
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

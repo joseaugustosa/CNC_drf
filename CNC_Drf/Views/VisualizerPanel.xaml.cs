@@ -36,6 +36,7 @@ public partial class VisualizerPanel : UserControl
     private void BtnZoomOut_Click(object sender, RoutedEventArgs e) => ApplyZoom(1.0 / 1.3);
     private void BtnZoom1_Click(object sender, RoutedEventArgs e)   => ResetCamera();
     private void BtnZoomFit_Click(object sender, RoutedEventArgs e) => Viewport.ZoomExtents(400);
+    public void FitView() => Viewport.ZoomExtents(400);
 
     private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
     {

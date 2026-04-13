@@ -6,280 +6,210 @@
       <StackPanel>
 
         <!-- ── WORK / MACHINE   INCH / MM ──────────────────────────────── -->
-        <Grid Height="28" Background="#222" Margin="0,0,0,2">
+        <Grid Height="28" Background="#222" Margin="0,0,0,1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ToggleButton Grid.Column="0" Content="WORK"  FontSize="10" FontWeight="Bold"
-                          IsChecked="{Binding WorkMode}" Foreground="White"
+            <ToggleButton Grid.Column="0" Content="WORK" FontSize="10" FontWeight="Bold"
+                          IsChecked="{Binding WorkMode}" Foreground="White" Margin="1,2"
                           Background="{Binding WorkMode, Converter={StaticResource BoolToBgConverter}}"
-                          Command="{Binding ToggleWorkModeCommand}" Margin="2,2"/>
+                          Command="{Binding ToggleWorkModeCommand}"/>
             <ToggleButton Grid.Column="1" Content="MACHINE" FontSize="10" FontWeight="Bold"
                           IsChecked="{Binding WorkMode, Converter={StaticResource InvertBoolConverter}}"
-                          Foreground="White" Margin="2,2"
+                          Foreground="White" Margin="1,2"
                           Command="{Binding ToggleWorkModeCommand}"/>
             <ToggleButton Grid.Column="2" Content="INCH" FontSize="10" FontWeight="Bold"
-                          IsChecked="{Binding InchMode}" Foreground="White" Margin="2,2"
+                          IsChecked="{Binding InchMode}" Foreground="White" Margin="1,2"
                           Command="{Binding ToggleInchModeCommand}"/>
-            <ToggleButton Grid.Column="3" Content="MM"   FontSize="10" FontWeight="Bold"
+            <ToggleButton Grid.Column="3" Content="MM" FontSize="10" FontWeight="Bold"
                           IsChecked="{Binding InchMode, Converter={StaticResource InvertBoolConverter}}"
-                          Foreground="White" Margin="2,2"
+                          Foreground="White" Margin="1,2"
                           Command="{Binding ToggleInchModeCommand}"/>
         </Grid>
 
         <!-- ── DRO — 6 eixos ─────────────────────────────────────────── -->
-        <Grid Background="#1a1a1a" Margin="0,0,0,2">
+        <Grid Background="#1a1a1a" Margin="0,0,0,1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="28"/>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="26"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="32"/>
+                <RowDefinition Height="30"/><RowDefinition Height="30"/>
+                <RowDefinition Height="30"/><RowDefinition Height="30"/>
+                <RowDefinition Height="30"/><RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <!-- X -->
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="X" FontSize="20" FontWeight="Bold"
-                       Foreground="#e53935" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="0" Grid.Column="1"
-                       Text="{Binding PosX, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero X" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 X0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
-
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="X" FontSize="20" FontWeight="Bold" Foreground="#e53935" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PosX, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero X" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="X"/>
             <!-- Y -->
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Y" FontSize="20" FontWeight="Bold"
-                       Foreground="#fdd835" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="1" Grid.Column="1"
-                       Text="{Binding PosY, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="1" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero Y" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 Y0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
-
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Y" FontSize="20" FontWeight="Bold" Foreground="#fdd835" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PosY, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="1" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero Y" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="Y"/>
             <!-- Z -->
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Z" FontSize="20" FontWeight="Bold"
-                       Foreground="#1e88e5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="2" Grid.Column="1"
-                       Text="{Binding PosZ, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="2" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero Z" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 Z0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
-
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Z" FontSize="20" FontWeight="Bold" Foreground="#1e88e5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding PosZ, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="2" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero Z" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="Z"/>
             <!-- A -->
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="A" FontSize="20" FontWeight="Bold"
-                       Foreground="#ab47bc" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="3" Grid.Column="1"
-                       Text="{Binding PosA, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="3" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero A" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 A0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
-
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="A" FontSize="20" FontWeight="Bold" Foreground="#ab47bc" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PosA, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero A" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="A"/>
             <!-- B -->
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="B" FontSize="20" FontWeight="Bold"
-                       Foreground="#26a69a" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="4" Grid.Column="1"
-                       Text="{Binding PosB, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="4" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero B" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 B0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
-
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="B" FontSize="20" FontWeight="Bold" Foreground="#26a69a" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding PosB, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="4" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero B" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="B"/>
             <!-- C -->
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="C" FontSize="20" FontWeight="Bold"
-                       Foreground="#ff7043" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="5" Grid.Column="1"
-                       Text="{Binding PosC, StringFormat={}{0:F3}}"
-                       FontFamily="Consolas" FontSize="18" FontWeight="Bold"
-                       Foreground="#a5d6a7" HorizontalAlignment="Right"
-                       VerticalAlignment="Center" Padding="0,0,6,0"/>
-            <Button Grid.Row="5" Grid.Column="2" Content="▼" FontSize="9"
-                    ToolTip="Zero C" Command="{Binding SendCommandCommand}"
-                    CommandParameter="G92 C0"
-                    Background="#333" BorderBrush="#555" Foreground="#ccc" Margin="1"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="C" FontSize="20" FontWeight="Bold" Foreground="#ff7043" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding PosC, StringFormat={}{0:F3}}" FontFamily="Consolas" FontSize="17" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,4,0"/>
+            <Button Grid.Row="5" Grid.Column="2" Content="▼" FontSize="8" ToolTip="Zero C" Margin="1" Background="#333" BorderBrush="#555" Foreground="#ccc"
+                    Command="{Binding ZeroAxisCommand}" CommandParameter="C"/>
         </Grid>
 
         <!-- ── Home Functions ─────────────────────────────────────────── -->
-        <UniformGrid Rows="2" Columns="3" Margin="2,2,2,2">
-            <Button Content="ALL ZERO"  FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding AllZeroCommand}"
-                    Background="#c62828" Foreground="White" BorderBrush="#b71c1c"/>
-            <Button Content="GOTO ZERO" FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding GotoZeroCommand}"
-                    Background="#1565c0" Foreground="White" BorderBrush="#0d47a1"/>
-            <Button Content="GOTO X0Y0" FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding GotoX0Y0Command}"
-                    Background="#1565c0" Foreground="White" BorderBrush="#0d47a1"/>
-            <Button Content="ALL HOME"  FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding AllHomeCommand}"
-                    Background="#555" Foreground="White" BorderBrush="#666"/>
-            <Button Content="XY HOME"   FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding XYHomeCommand}"
-                    Background="#555" Foreground="White" BorderBrush="#666"/>
-            <Button Content="Z SAFE"    FontSize="9" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding ZSafeCommand}"
-                    Background="#555" Foreground="White" BorderBrush="#666"/>
+        <UniformGrid Rows="2" Columns="3" Margin="1">
+            <Button Content="ALL ZERO"  FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding AllZeroCommand}" Background="#c62828" Foreground="White" BorderBrush="#b71c1c"/>
+            <Button Content="GOTO ZERO" FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding GotoZeroCommand}" Background="#1565c0" Foreground="White" BorderBrush="#0d47a1"/>
+            <Button Content="GOTO X0Y0" FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding GotoX0Y0Command}" Background="#1565c0" Foreground="White" BorderBrush="#0d47a1"/>
+            <Button Content="ALL HOME"  FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding AllHomeCommand}" Background="#555" Foreground="White" BorderBrush="#666"/>
+            <Button Content="XY HOME"   FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding XYHomeCommand}" Background="#555" Foreground="White" BorderBrush="#666"/>
+            <Button Content="Z SAFE"    FontSize="9" FontWeight="Bold" Height="24" Margin="1" Command="{Binding ZSafeCommand}" Background="#555" Foreground="White" BorderBrush="#666"/>
         </UniformGrid>
 
-        <Separator Background="#444" Margin="2,2"/>
+        <!-- ── GOTO extra commands ────────────────────────────────────── -->
+        <UniformGrid Rows="2" Columns="2" Margin="1,0">
+            <Button FontSize="9" FontWeight="Bold" Height="22" Margin="1" Command="{Binding GotoLastPositionCommand}" Background="#37474f" Foreground="#90caf9" BorderBrush="#546e7a">
+                <TextBlock Text="GOTO LAST POS" ToolTip="Go to last position"/>
+            </Button>
+            <Button FontSize="9" FontWeight="Bold" Height="22" Margin="1" Command="{Binding GotoMaxZCommand}" Background="#37474f" Foreground="#90caf9" BorderBrush="#546e7a">
+                <TextBlock Text="GOTO MAX Z" ToolTip="Move to maximum Z in G-Code"/>
+            </Button>
+            <Button FontSize="9" FontWeight="Bold" Height="22" Margin="1" Command="{Binding GotoToolAutoHeightCommand}" Background="#37474f" Foreground="#a5d6a7" BorderBrush="#546e7a">
+                <TextBlock Text="TOOL AUTO HEIGHT" ToolTip="Go to tool auto height position"/>
+            </Button>
+            <Button FontSize="9" FontWeight="Bold" Height="22" Margin="1" Command="{Binding GotoToolChangeCommand}" Background="#37474f" Foreground="#a5d6a7" BorderBrush="#546e7a">
+                <TextBlock Text="TOOL CHANGE POS" ToolTip="Go to tool change position"/>
+            </Button>
+        </UniformGrid>
 
-        <!-- ── Tool Zero + Spindle ───────────────────────────────────── -->
+        <Separator Background="#444" Margin="2,3"/>
+
+        <!-- ── Tool Zero + Spindle tabs ──────────────────────────────── -->
         <Grid Margin="2,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="⚙ Tool Zero" FontSize="10" Height="26"
-                    Command="{Binding ToolZeroCommand}"
-                    Background="#37474f" Foreground="White" BorderBrush="#546e7a" Margin="1"/>
-            <ToggleButton Grid.Column="1" FontSize="10" Height="26" Margin="1"
-                          IsChecked="{Binding SpindleOn}"
-                          Command="{Binding SpindleToggleCommand}"
-                          Background="{Binding SpindleOn, Converter={StaticResource BoolToBgConverter}}"
-                          Foreground="White" BorderBrush="#546e7a">
-                <TextBlock Text="{Binding SpindleOn, Converter={StaticResource BoolToSpindleLabel}}"/>
+            <Button Grid.Column="0" Height="26" Margin="1" Command="{Binding GotoToolAutoHeightCommand}" Background="#37474f" Foreground="White" BorderBrush="#546e7a">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚙" FontSize="13" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tool Zero" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <ToggleButton Grid.Column="1" Height="26" Margin="1" IsChecked="{Binding SpindleOn}" Command="{Binding SpindleToggleCommand}" Background="{Binding SpindleOn, Converter={StaticResource BoolToBgConverter}}" Foreground="White" BorderBrush="#546e7a">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚡" FontSize="13" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SpindleOn, Converter={StaticResource BoolToSpindleLabel}}" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
             </ToggleButton>
         </Grid>
 
-        <!-- ── Spindle RPM ───────────────────────────────────────────── -->
-        <Grid Margin="4,2">
+        <!-- ── Spindle speed slider ───────────────────────────────────── -->
+        <Grid Margin="4,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="70"/>
             </Grid.ColumnDefinitions>
-            <Slider Grid.Column="0" Minimum="0" Maximum="24000"
-                    Value="{Binding SpindleRpm}"
-                    VerticalAlignment="Center"
-                    Foreground="#66bb6a"/>
+            <Slider Grid.Column="0" Minimum="0" Maximum="24000" Value="{Binding SpindleRpm}" VerticalAlignment="Center" Foreground="#66bb6a"/>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0">
                 <TextBlock Text="Speed (rpm)" FontSize="8" Foreground="#888" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding SpindleRpm, StringFormat={}{0:F0}}"
-                           FontSize="12" FontWeight="Bold" Foreground="#a5d6a7"
-                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding SpindleRpm, StringFormat={}{0:F0}}" FontSize="13" FontWeight="Bold" Foreground="#a5d6a7" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
+
+        <!-- ── Spindle Speed +/- ─────────────────────────────────────── -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2,0,2,3">
+            <Button Content="▼ -10%" FontSize="9" Width="64" Height="20" Margin="1" Command="{Binding SpindleSpeedDecreaseCommand}" Background="#444" Foreground="#ef9a9a" BorderBrush="#555"/>
+            <Button Content="▲ +10%" FontSize="9" Width="64" Height="20" Margin="1" Command="{Binding SpindleSpeedIncreaseCommand}" Background="#444" Foreground="#a5d6a7" BorderBrush="#555"/>
+        </StackPanel>
 
         <Separator Background="#444" Margin="2,2"/>
 
-        <!-- ── Manual speed + Step ───────────────────────────────────── -->
+        <!-- ── Feed override + Manual speed ─────────────────────────── -->
         <Grid Margin="4,2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Manual speed mm/min" FontSize="9"
-                       Foreground="#aaa" VerticalAlignment="Center" Margin="0,0,4,0"/>
-            <TextBox Grid.Column="1" Text="{Binding JogFeedRate, StringFormat={}{0:F0}}"
-                     Background="#333" Foreground="White" BorderBrush="#555"
-                     FontSize="11" Padding="2,1" HorizontalContentAlignment="Right"/>
+            <TextBlock Grid.Column="0" Text="Manual speed mm/min" FontSize="9" Foreground="#aaa" VerticalAlignment="Center" Margin="0,0,4,0"/>
+            <TextBox Grid.Column="1" Text="{Binding JogFeedRate, StringFormat={}{0:F0}}" Background="#333" Foreground="White" BorderBrush="#555" FontSize="11" Padding="2,1" HorizontalContentAlignment="Right"/>
         </Grid>
 
-        <!-- Step X1 / X10 / X100 -->
-        <UniformGrid Rows="1" Columns="3" Margin="2,2,2,4">
-            <Button Content="X1"   FontSize="11" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding SetStepCommand}" CommandParameter="1"
-                    Background="#444" Foreground="White" BorderBrush="#666"/>
-            <Button Content="X10"  FontSize="11" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding SetStepCommand}" CommandParameter="10"
-                    Background="#444" Foreground="White" BorderBrush="#666"/>
-            <Button Content="X100" FontSize="11" FontWeight="Bold" Height="24" Margin="1"
-                    Command="{Binding SetStepCommand}" CommandParameter="100"
-                    Background="#444" Foreground="White" BorderBrush="#666"/>
+        <!-- ── Feed override % ───────────────────────────────────────── -->
+        <Grid Margin="4,1,4,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="-" Width="22" Height="20" FontSize="12" FontWeight="Bold"
+                    Command="{Binding SpeedDecreaseCommand}" Background="#444" Foreground="#ef9a9a" BorderBrush="#555"/>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding FeedOverride, StringFormat='Feed: {0:F0}%'}" FontSize="10" Foreground="#aaa" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <Button Grid.Column="2" Content="+" Width="22" Height="20" FontSize="12" FontWeight="Bold"
+                    Command="{Binding SpeedIncreaseCommand}" Background="#444" Foreground="#a5d6a7" BorderBrush="#555"/>
+        </Grid>
+
+        <!-- ── Step X1 / X10 / X100 ─────────────────────────────────── -->
+        <UniformGrid Rows="1" Columns="3" Margin="2,0,2,3">
+            <Button Content="X1"   FontSize="11" FontWeight="Bold" Height="24" Margin="1" Command="{Binding SetStepCommand}" CommandParameter="1" Background="#444" Foreground="White" BorderBrush="#666"/>
+            <Button Content="X10"  FontSize="11" FontWeight="Bold" Height="24" Margin="1" Command="{Binding SetStepCommand}" CommandParameter="10" Background="#444" Foreground="White" BorderBrush="#666"/>
+            <Button Content="X100" FontSize="11" FontWeight="Bold" Height="24" Margin="1" Command="{Binding SetStepCommand}" CommandParameter="100" Background="#444" Foreground="White" BorderBrush="#666"/>
         </UniformGrid>
 
         <!-- ── Jog Buttons ────────────────────────────────────────────── -->
-        <!-- X/Y/Z jog -->
         <Grid Margin="2,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="28"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                <TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center" Margin="0,4"/>
-                <TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center" Margin="0,4"/>
-                <TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center" Margin="0,4"/>
-                <TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center" Margin="0,4"/>
-                <TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="13"
-                           HorizontalAlignment="Center" Margin="0,4"/>
+                <TextBlock Text="X" Foreground="#e53935" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                <TextBlock Text="Y" Foreground="#fdd835" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
+                <TextBlock Text="Z" Foreground="#1e88e5" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
+                <TextBlock Text="A" Foreground="#ab47bc" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
+                <TextBlock Text="B" Foreground="#26a69a" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
+                <TextBlock Text="C" Foreground="#ff7043" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" Margin="0,3"/>
             </StackPanel>
-
             <UniformGrid Grid.Column="1" Rows="6" Columns="2" Margin="2">
-                <!-- X -->
-                <Button Content="◀" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="X:-"
-                        Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="X:+"
-                        Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
-                <!-- Y -->
-                <Button Content="◀" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="Y:-"
-                        Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="Y:+"
-                        Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
-                <!-- Z -->
-                <Button Content="▲" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="Z:+"
-                        Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
-                <Button Content="▼" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="Z:-"
-                        Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
-                <!-- A -->
-                <Button Content="◀" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="A:-"
-                        Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="A:+"
-                        Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
-                <!-- B -->
-                <Button Content="◀" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="B:-"
-                        Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="B:+"
-                        Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
-                <!-- C -->
-                <Button Content="◀" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="C:-"
-                        Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
-                <Button Content="▶" FontSize="14" Height="26" Margin="1"
-                        Command="{Binding JogAxisCommand}" CommandParameter="C:+"
-                        Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
+                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="X:-" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
+                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="X:+" Background="#3a3a3a" Foreground="#e53935" BorderBrush="#555"/>
+                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Y:-" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
+                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Y:+" Background="#3a3a3a" Foreground="#fdd835" BorderBrush="#555"/>
+                <Button Content="▲" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Z:+" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
+                <Button Content="▼" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="Z:-" Background="#3a3a3a" Foreground="#1e88e5" BorderBrush="#555"/>
+                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="A:-" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
+                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="A:+" Background="#3a3a3a" Foreground="#ab47bc" BorderBrush="#555"/>
+                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="B:-" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
+                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="B:+" Background="#3a3a3a" Foreground="#26a69a" BorderBrush="#555"/>
+                <Button Content="◀" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="C:-" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
+                <Button Content="▶" FontSize="14" Height="26" Margin="1" Command="{Binding JogAxisCommand}" CommandParameter="C:+" Background="#3a3a3a" Foreground="#ff7043" BorderBrush="#555"/>
             </UniformGrid>
         </Grid>
+
+        <!-- ── EMERGENCY STOP ─────────────────────────────────────────── -->
+        <Button Margin="4,6,4,2" Height="52" Command="{Binding EmergencyStopCommand}"
+                Background="#d32f2f" BorderBrush="#b71c1c" BorderThickness="3">
+            <StackPanel>
+                <TextBlock Text="EMERGENCY STOP" FontSize="13" FontWeight="Bold" Foreground="White"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="⛔" FontSize="20" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Button>
 
         <Separator Background="#444" Margin="2,4"/>
 
@@ -296,7 +226,7 @@
                           SelectedItem="{Binding PortName}"
                           Background="#333" Foreground="White"/>
                 <Button Grid.Column="1" Content="↺" Width="22" FontSize="11"
-                        ToolTip="Atualizar portas" Click="BtnRefreshPorts_Click"
+                        ToolTip="Refresh ports" Click="BtnRefreshPorts_Click"
                         Background="#444" Foreground="White" BorderBrush="#666" Margin="0,0,2,0"/>
                 <ToggleButton Grid.Column="2" Width="64" FontSize="10" FontWeight="Bold"
                               IsChecked="{Binding Connected, Mode=OneWay}"

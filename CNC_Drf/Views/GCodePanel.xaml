@@ -5,43 +5,19 @@
     <DockPanel>
 
         <!-- ── Toolbar superior ────────────────────────────────────────── -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"
-                    Background="#222" Height="36">
-            <Button Content="Open File" Click="BtnOpen_Click"
-                    Width="60" Margin="2" Padding="2,1"
-                    Background="#444" Foreground="White" BorderBrush="#666"
-                    FontSize="10"/>
-            <Button Content="Edit G-Code" Click="BtnEdit_Click"
-                    Width="66" Margin="2" Padding="2,1"
-                    Background="#444" Foreground="White" BorderBrush="#666"
-                    FontSize="10"/>
-            <Button Content="Last G-Code" Click="BtnLast_Click"
-                    Width="66" Margin="2" Padding="2,1"
-                    Background="#444" Foreground="White" BorderBrush="#666"
-                    FontSize="10"/>
-        </StackPanel>
+        <WrapPanel DockPanel.Dock="Top" Background="#1e1e1e" Margin="0,0,0,1">
+            <Button Content="📂 Open" Click="BtnOpen_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="White" BorderBrush="#666" ToolTip="Open G-code file"/>
+            <Button Content="✏ Edit" Click="BtnEdit_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="White" BorderBrush="#666" ToolTip="Edit G-Code program"/>
+            <Button Content="🔁 Last" Click="BtnLast_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="White" BorderBrush="#666" ToolTip="Reload last G-Code"/>
+            <Separator Width="1" Background="#555" Margin="2,3"/>
+            <Button Content="💾 Save" Click="BtnSave_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="#a5d6a7" BorderBrush="#666" ToolTip="Save G-code"/>
+            <Button Content="📋 Copy" Click="BtnCopy_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="#90caf9" BorderBrush="#666" ToolTip="Copy to clipboard"/>
+            <Separator Width="1" Background="#555" Margin="2,3"/>
+            <ToggleButton x:Name="BtnStepByStep" Content="⏩ Step" Click="BtnStepByStep_Click" Margin="2" Padding="4,2" FontSize="10" Background="#444" Foreground="#f9e2af" BorderBrush="#666" ToolTip="Use step by step" IsChecked="{Binding StepByStep}"/>
+        </WrapPanel>
 
-        <!-- ── Status bar inferior ─────────────────────────────────────── -->
-        <StackPanel DockPanel.Dock="Bottom" Background="#1a1a1a">
-            <!-- Tempo da tarefa -->
-            <StackPanel Orientation="Horizontal" Margin="4,2">
-                <TextBlock Text="of the task: " Foreground="#aaa" FontSize="10"/>
-                <TextBlock Text="{Binding TaskTime}" Foreground="#ccc" FontSize="10"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="4,0,4,2">
-                <TextBlock Text="to completion:" Foreground="#aaa" FontSize="10"/>
-            </StackPanel>
-            <!-- Progresso -->
-            <ProgressBar Value="{Binding Progress}" Maximum="100"
-                         Height="6" Margin="4,0,4,2"
-                         Background="#333" Foreground="#5ba85b"/>
-            <!-- Status log última linha -->
-            <TextBlock Text="{Binding StatusText}" Foreground="#88bb88"
-                       FontSize="9" Margin="4,2" TextWrapping="Wrap"/>
-        </StackPanel>
-
-        <!-- ── Botões Start / Pause / Stop ─────────────────────────────── -->
-        <Grid DockPanel.Dock="Bottom" Height="64" Background="#222" Margin="0,2,0,0">
+        <!-- ── Run controls ────────────────────────────────────────────── -->
+        <Grid DockPanel.Dock="Top" Height="52" Background="#222" Margin="0,0,0,1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -49,39 +25,47 @@
             </Grid.ColumnDefinitions>
 
             <!-- Start -->
-            <Button Grid.Column="0" Click="BtnStart_Click" Margin="4"
-                    Background="#2e7d32" BorderBrush="#43a047">
+            <Button Grid.Column="0" Margin="3,4" Click="BtnStart_Click" Background="#2e7d32" BorderBrush="#43a047">
                 <StackPanel HorizontalAlignment="Center">
-                    <Ellipse Width="18" Height="18" Fill="#66bb6a" Margin="0,2,0,0"/>
-                    <TextBlock Text="Start" Foreground="White" FontWeight="Bold"
-                               FontSize="11" HorizontalAlignment="Center"/>
+                    <TextBlock Text="▶" FontSize="16" HorizontalAlignment="Center" Foreground="#66bb6a"/>
+                    <TextBlock Text="Start" Foreground="White" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
 
-            <!-- Pause -->
-            <Button Grid.Column="1" Click="BtnPause_Click" Margin="4"
-                    Background="#444" BorderBrush="#666">
-                <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="⏸" FontSize="14" HorizontalAlignment="Center"
-                               Foreground="#ccc" Margin="0,2,0,0"/>
-                    <TextBlock Text="Pause" Foreground="#ccc" FontSize="11"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Button>
+            <!-- Pause / Smooth Stop -->
+            <StackPanel Grid.Column="1" Margin="2,4" VerticalAlignment="Stretch">
+                <Button Click="BtnPause_Click" Background="#37474f" BorderBrush="#546e7a" Height="22" Margin="0,0,0,1">
+                    <TextBlock Text="⏸ Pause" Foreground="#ccc" FontSize="10" FontWeight="Bold"/>
+                </Button>
+                <Button Click="BtnSmoothStop_Click" Background="#37474f" BorderBrush="#546e7a" Height="22">
+                    <TextBlock Text="🟡 Smooth Stop" Foreground="#f9e2af" FontSize="10" FontWeight="Bold"/>
+                </Button>
+            </StackPanel>
 
             <!-- Stop -->
-            <Button Grid.Column="2" Click="BtnStop_Click" Margin="4"
-                    Background="#444" BorderBrush="#666">
+            <Button Grid.Column="2" Margin="3,4" Click="BtnStop_Click" Background="#c62828" BorderBrush="#b71c1c">
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="■" FontSize="14" HorizontalAlignment="Center"
-                               Foreground="#e57373" Margin="0,2,0,0"/>
-                    <TextBlock Text="Stop" Foreground="#e57373" FontSize="11"
-                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="■" FontSize="16" HorizontalAlignment="Center" Foreground="#ef9a9a"/>
+                    <TextBlock Text="Stop" Foreground="White" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>
 
-        <!-- ── Lista G-code + drop zone ────────────────────────────────── -->
+        <!-- ── Status / tempo ──────────────────────────────────────────── -->
+        <StackPanel DockPanel.Dock="Bottom" Background="#1a1a1a" Margin="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Margin="4,2">
+                <TextBlock Text="of the task: " Foreground="#888" FontSize="10"/>
+                <TextBlock Text="{Binding TaskTime}" Foreground="#ccc" FontSize="10" FontWeight="SemiBold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="4,0,4,2">
+                <TextBlock Text="to completion: " Foreground="#888" FontSize="10"/>
+                <TextBlock Text="{Binding TimeToComp}" Foreground="#ccc" FontSize="10" FontWeight="SemiBold"/>
+            </StackPanel>
+            <ProgressBar Value="{Binding Progress}" Maximum="100" Height="5" Margin="4,0,4,2" Background="#333" Foreground="#5ba85b" BorderThickness="0"/>
+            <TextBlock Text="{Binding StatusText}" Foreground="#77bb77" FontSize="9" Margin="4,2" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- ── Lista G-code ─────────────────────────────────────────────── -->
         <Grid>
             <ListBox x:Name="GcodeList"
                      ItemsSource="{Binding Parser.Lines}"
@@ -91,23 +75,40 @@
                      VirtualizingPanel.IsVirtualizing="True"
                      VirtualizingPanel.VirtualizationMode="Recycling"
                      AllowDrop="True" Drop="GcodeList_Drop"
-                     DragOver="GcodeList_DragOver">
+                     DragOver="GcodeList_DragOver"
+                     MouseDoubleClick="GcodeList_DoubleClick"
+                     SelectionChanged="GcodeList_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Raw}" FontFamily="Consolas" FontSize="11"
-                                   Foreground="{Binding IsComment, Converter={StaticResource CommentColorConverter}}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Number}" Foreground="#555" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,4,0"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Raw}" FontFamily="Consolas" FontSize="11"
+                                       Foreground="{Binding IsComment, Converter={StaticResource CommentColorConverter}}"/>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="▶ Start from here" Click="CtxStartFromHere_Click"/>
+                        <Separator/>
+                        <MenuItem Header="📋 Copy line" Click="CtxCopyLine_Click"/>
+                        <MenuItem Header="📋 Copy all to clipboard" Click="BtnCopy_Click"/>
+                        <Separator/>
+                        <MenuItem Header="💾 Save G-code" Click="BtnSave_Click"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
 
-            <!-- Drop here overlay quando vazio -->
-            <StackPanel x:Name="DropOverlay" VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Visibility="{Binding FileName, Converter={StaticResource EmptyToVisibleConverter}}">
-                <TextBlock Text="⬇" FontSize="32" Foreground="#555"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="Drop here" Foreground="#555" FontSize="12"
-                           HorizontalAlignment="Center"/>
+            <!-- Drop here overlay -->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Visibility="{Binding FileName, Converter={StaticResource EmptyToVisibleConverter}}"
+                        IsHitTestVisible="False">
+                <TextBlock Text="⬇" FontSize="36" Foreground="#555" HorizontalAlignment="Center"/>
+                <TextBlock Text="Drop here" Foreground="#555" FontSize="13" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
     </DockPanel>

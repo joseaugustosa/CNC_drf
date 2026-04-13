@@ -23,8 +23,31 @@ public partial class GCodePanel : UserControl
         if (!string.IsNullOrEmpty(VM?.FilePath)) VM.LoadFile(VM.FilePath);
     }
 
-    private void BtnStart_Click(object sender, RoutedEventArgs e)  => VM?.CycleResumeCommand.Execute(null);
+    private void BtnSave_Click(object sender, RoutedEventArgs e)
+    {
+        if (VM is null) return;
+        var dlg = new SaveFileDialog
+        {
+            Title  = "Save G-code",
+            Filter = "G-code|*.nc;*.gcode;*.ngc;*.tap|All|*.*",
+            FileName = VM.FileName
+        };
+        if (dlg.ShowDialog() != true) return;
+        File.WriteAllText(dlg.FileName, VM.GetGCodeText());
+    }
+
+    private void BtnCopy_Click(object sender, RoutedEventArgs e)
+    {
+        if (VM is null) return;
+        Clipboard.SetText(VM.GetGCodeText());
+    }
+
+    private void BtnStepByStep_Click(object sender, RoutedEventArgs e)
+        => VM?.ToggleStepByStepCommand.Execute(null);
+
+    private void BtnStart_Click(object sender, RoutedEventArgs e)   => VM?.StartCycleCommand.Execute(null);
     private void BtnPause_Click(object sender, RoutedEventArgs e)   => VM?.FeedHoldCommand.Execute(null);
+    private void BtnSmoothStop_Click(object sender, RoutedEventArgs e) => VM?.SmoothStopCommand.Execute(null);
     private void BtnStop_Click(object sender, RoutedEventArgs e)    => VM?.SoftResetCommand.Execute(null);
 
     private void GcodeList_DragOver(object sender, DragEventArgs e)
@@ -38,12 +61,37 @@ public partial class GCodePanel : UserControl
         if (files?.Length > 0) VM?.LoadFile(files[0]);
     }
 
+    private void GcodeList_DoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (GcodeList.SelectedIndex >= 0)
+            VM?.SetCurrentLine(GcodeList.SelectedIndex);
+    }
+
+    private void GcodeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (GcodeList.SelectedIndex >= 0 && VM is not null)
+            VM.StartFromLine = GcodeList.SelectedIndex;
+    }
+
+    private void CtxStartFromHere_Click(object sender, RoutedEventArgs e)
+    {
+        if (VM is null || GcodeList.SelectedIndex < 0) return;
+        VM.StartFromLine = GcodeList.SelectedIndex;
+        VM.StartCycleCommand.Execute(null);
+    }
+
+    private void CtxCopyLine_Click(object sender, RoutedEventArgs e)
+    {
+        if (GcodeList.SelectedItem is Core.GCodeLine line)
+            Clipboard.SetText(line.Raw);
+    }
+
     private void OpenFile()
     {
         var dlg = new OpenFileDialog
         {
-            Title  = "Abrir G-code",
-            Filter = "G-code|*.nc;*.gcode;*.ngc;*.tap;*.plt;*.txt|Todos|*.*"
+            Title  = "Open G-code",
+            Filter = "G-code|*.nc;*.gcode;*.ngc;*.tap;*.plt;*.txt|All|*.*"
         };
         if (dlg.ShowDialog() == true) VM?.LoadFile(dlg.FileName);
     }
