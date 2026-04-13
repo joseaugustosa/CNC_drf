@@ -1,5 +1,6 @@
 ﻿using CNC_Drf.Dialogs;
 using CNC_Drf.ViewModels;
+using CNC_Drf.Views;
 using Microsoft.Win32;
 
 namespace CNC_Drf;
@@ -35,7 +36,8 @@ public partial class MainWindow : Window
     }
 
     // ── Run ──────────────────────────────────────────────────────────────
-    private void BtnStart_Click(object sender, RoutedEventArgs e)      => _vm.StartCycleCommand.Execute(null);
+    private void BtnStart_Click(object sender, RoutedEventArgs e)
+        => _vm.StartCycleCommand.Execute(null);
     private void BtnHold_Click(object sender, RoutedEventArgs e)       => _vm.FeedHoldCommand.Execute(null);
     private void BtnSmoothStop_Click(object sender, RoutedEventArgs e) => _vm.SmoothStopCommand.Execute(null);
     private void BtnStop_Click(object sender, RoutedEventArgs e)       => _vm.SoftResetCommand.Execute(null);
@@ -50,7 +52,25 @@ public partial class MainWindow : Window
     // ── Dialogs ──────────────────────────────────────────────────────────
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
     {
-        new SettingsDialog { Owner = this }.ShowDialog();
+        var dlg = new SettingsDialog { Owner = this };
+
+        // Wire GRBL read: send $$ to board; responses reach vm.GrblSettings automatically
+        dlg.RequestGrblRead = () => _vm.ReadGrblSettingsCommand.Execute(null);
+
+        // Wire GRBL write: send each $N=V line to board
+        dlg.RequestGrblWrite = cmds => _vm.WriteGrblCommands(cmds);
+
+        // Wire controller type change
+        dlg.SelectController(_vm.Controller.Type);
+        dlg.ControllerTypeChanged = type => _vm.SetControllerType(type);
+
+        // Forward any $N=V lines that arrive while dialog is open
+        void OnGrblLine(string line) => dlg.ApplyGrblLine(line);
+        _vm.GrblSettingLineReceived += OnGrblLine;
+
+        dlg.ShowDialog();
+
+        _vm.GrblSettingLineReceived -= OnGrblLine;
     }
 
     private void BtnAbout_Click(object sender, RoutedEventArgs e)

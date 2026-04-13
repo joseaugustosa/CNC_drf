@@ -10,5 +10,7 @@
         <core:InvertBoolConverter          x:Key="InvertBoolConverter"/>
         <core:EmptyToVisibleConverter      x:Key="EmptyToVisibleConverter"/>
         <core:CommentColorConverter        x:Key="CommentColorConverter"/>
+        <core:BoolToVisibleConverter        x:Key="BoolToVisibleConverter"/>
+        <core:InvertBoolToVisibleConverter  x:Key="InvertBoolToVisibleConverter"/>
     </Application.Resources>
 </Application>

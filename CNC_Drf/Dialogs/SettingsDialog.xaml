@@ -433,6 +433,51 @@
                                 <TextBlock Grid.Column="1" Text="Tool command settings, automatical tool change." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
                                 <Button Grid.Column="2" Content="▶" Background="#4caf50" Foreground="White" BorderBrush="#388e3c" FontSize="12" Width="26" Height="26" Click="BtnNavTools_Click"/>
                             </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="GRBL Controller" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#e8eaf6" BorderBrush="#7986cb" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="⚡" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="GRBL parameters: steps/mm, speeds, homing, limits, spindle." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#3f51b5" Foreground="White" BorderBrush="#283593" FontSize="12" Width="26" Height="26" Click="BtnNavGrbl_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="Controller Type" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#fbe9e7" BorderBrush="#ffab91" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="🎛" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Selecione o firmware: GRBL 0.9 / 1.1 / HAL / ESP32 / LPC / STM32 ou Mach3." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#e64a19" Foreground="White" BorderBrush="#bf360c" FontSize="12" Width="26" Height="26" Click="BtnNavControllerType_Click"/>
+                            </Grid>
+                            <Separator Background="#ddd" Margin="0,4"/>
+
+                            <TextBlock Text="GRBL — Configuração de Eixos" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,2"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="28"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="28" Height="28" Background="#e8f5e9" BorderBrush="#a5d6a7" BorderThickness="1" CornerRadius="2">
+                                    <TextBlock Text="↔" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#2e7d32"/>
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="Sentido, passos/mm, velocidade máxima e curso por eixo. Só disponível em modo GRBL." FontSize="10" Foreground="#555" TextWrapping="Wrap" Margin="4,0"/>
+                                <Button Grid.Column="2" Content="▶" Background="#2e7d32" Foreground="White" BorderBrush="#1b5e20" FontSize="12" Width="26" Height="26" Click="BtnNavGrblAxes_Click"/>
+                            </Grid>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
@@ -1253,6 +1298,575 @@
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
+            </TabItem>
+
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: Controller Type                                        -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="Controller Type" x:Name="TabControllerType">
+                <TabItem.Tag>
+                    <TextBlock Text="🎛" FontSize="17"/>
+                </TabItem.Tag>
+                <DockPanel Background="White">
+
+                    <!-- Banner com controlador ativo -->
+                    <Border DockPanel.Dock="Top" Background="#fbe9e7" BorderBrush="#ffab91"
+                            BorderThickness="0,0,0,1" Padding="10,7">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Controlador ativo: " FontSize="11" Foreground="#555" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TbActiveController" Text="GRBL 1.1"
+                                           FontSize="12" FontWeight="Bold" Foreground="#bf360c"
+                                           VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" x:Name="TbControllerFeatures"
+                                       Text="" FontSize="9" Foreground="#777"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="10">
+
+                            <!-- ── Secção GRBL ── -->
+                            <TextBlock Text="GRBL — Open Source G-code Streaming Protocol"
+                                       FontSize="12" FontWeight="Bold" Foreground="#bf360c"
+                                       Margin="0,0,0,6"/>
+
+                            <WrapPanel x:Name="ControllerCardPanel" Margin="0,0,0,12"/>
+
+                            <!-- ── Secção Outros ── -->
+                            <TextBlock Text="Outros Controladores"
+                                       FontSize="12" FontWeight="Bold" Foreground="#37474f"
+                                       Margin="0,6,0,6"/>
+
+                            <WrapPanel x:Name="OtherControllerCardPanel"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: GRBL — Configuração de Eixos                          -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="GRBL — Eixos" x:Name="TabGrblAxes">
+                <TabItem.Tag>
+                    <TextBlock Text="↔" FontSize="18" Foreground="#2e7d32"/>
+                </TabItem.Tag>
+                <Grid>
+
+                    <!-- ── Overlay de bloqueio (modo não-GRBL) ─────────── -->
+                    <Border x:Name="GrblAxesLockOverlay"
+                            Background="#80ffffff" Panel.ZIndex="10"
+                            Visibility="Collapsed">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="🔒" FontSize="48" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Apenas disponível em modo GRBL"
+                                       FontSize="16" FontWeight="Bold" Foreground="#555"
+                                       HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                            <TextBlock Text="Vá ao tab &quot;Controller Type&quot; e selecione um controlador GRBL."
+                                       FontSize="11" Foreground="#777"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <DockPanel Background="White">
+
+                        <!-- ── Barra de topo ──────────────────────────── -->
+                        <Border DockPanel.Dock="Top" Background="#e8f5e9" BorderBrush="#c8e6c9"
+                                BorderThickness="0,0,0,1" Padding="8,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" x:Name="BtnGrblAxesRead"
+                                        Width="130" Height="28" Margin="0,0,8,0"
+                                        Click="BtnGrblAxesRead_Click"
+                                        Background="#1565c0" Foreground="White" BorderBrush="#0d47a1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="⬇" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Ler da placa" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Grid.Column="1" x:Name="BtnGrblAxesWrite"
+                                        Width="130" Height="28" Margin="0,0,8,0"
+                                        Click="BtnGrblAxesWrite_Click"
+                                        Background="#2e7d32" Foreground="White" BorderBrush="#1b5e20">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="⬆" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Gravar na placa" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Grid.Column="2" x:Name="BtnGrblAxesDefaults"
+                                        Width="130" Height="28" Margin="0,0,16,0"
+                                        Click="BtnGrblAxesDefaults_Click"
+                                        Background="#f57f17" Foreground="White" BorderBrush="#e65100">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="↺" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Valores padrão" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <TextBlock Grid.Column="3" x:Name="TbGrblAxesStatus"
+                                           Text="Ligue à placa e clique 'Ler da placa' para carregar os valores actuais."
+                                           FontSize="10" Foreground="#555" VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Column="4" x:Name="TbGrblAxesController"
+                                           Text="" FontSize="10" FontWeight="Bold"
+                                           Foreground="#2e7d32" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- ── Tabela de eixos ────────────────────────── -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="8">
+                            <StackPanel>
+
+                                <!-- Cabeçalhos -->
+                                <Grid Margin="0,4,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="130"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Eixo"        FontSize="10" FontWeight="Bold" Foreground="#333"/>
+                                    <TextBlock Grid.Column="1" Text="Sentido ($3)"   FontSize="10" FontWeight="Bold" Foreground="#333"/>
+                                    <TextBlock Grid.Column="2" Text="Passos/mm ($100-102)" FontSize="10" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Column="3" Text="Vel. máxima mm/min ($110-112)" FontSize="10" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Column="4" Text="Aceleração mm/s² ($120-122)" FontSize="10" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Column="5" Text="Curso máx. mm ($130-132)" FontSize="10" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                                </Grid>
+                                <Separator Background="#ddd" Margin="0,0,0,4"/>
+
+                                <!-- ── Eixo X ── -->
+                                <Border x:Name="RowX" BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Margin="0,0,0,2" Padding="0,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="130"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="X" FontSize="32" FontWeight="Bold"
+                                                   Foreground="#e53935" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <CheckBox x:Name="ChkXDirInvert" Content="Inverter X" FontSize="10" Margin="0,0,0,2"/>
+                                            <TextBlock Text="bit 0 de $3" FontSize="8" Foreground="#888"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbXSteps" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="steps/mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbXMaxRate" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/min" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbXAccel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/s²" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbXTravel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- ── Eixo Y ── -->
+                                <Border x:Name="RowY" BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Margin="0,0,0,2" Padding="0,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="130"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="Y" FontSize="32" FontWeight="Bold"
+                                                   Foreground="#f9a825" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <CheckBox x:Name="ChkYDirInvert" Content="Inverter Y" FontSize="10" Margin="0,0,0,2"/>
+                                            <TextBlock Text="bit 1 de $3" FontSize="8" Foreground="#888"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbYSteps" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="steps/mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbYMaxRate" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/min" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbYAccel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/s²" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbYTravel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- ── Eixo Z ── -->
+                                <Border x:Name="RowZ" BorderBrush="#e0e0e0" BorderThickness="0,0,0,1" Margin="0,0,0,2" Padding="0,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="130"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="Z" FontSize="32" FontWeight="Bold"
+                                                   Foreground="#1e88e5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <CheckBox x:Name="ChkZDirInvert" Content="Inverter Z" FontSize="10" Margin="0,0,0,2"/>
+                                            <TextBlock Text="bit 2 de $3" FontSize="8" Foreground="#888"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbZSteps" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="steps/mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbZMaxRate" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/min" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbZAccel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm/s²" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="5" VerticalAlignment="Center">
+                                            <TextBox x:Name="TbZTravel" Height="24" FontSize="11" Padding="3,2"
+                                                     Background="White" BorderBrush="#bbb"/>
+                                            <TextBlock Text="mm" FontSize="8" Foreground="#888" Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Nota informativa -->
+                                <Border Background="#fff8e1" BorderBrush="#ffe082" BorderThickness="1"
+                                        CornerRadius="3" Margin="0,10,0,0" Padding="10,6">
+                                    <StackPanel>
+                                        <TextBlock Text="ℹ  Como funciona o sentido de movimento" FontSize="10" FontWeight="Bold" Foreground="#e65100" Margin="0,0,0,4"/>
+                                        <TextBlock TextWrapping="Wrap" FontSize="10" Foreground="#555">
+                                            <Run Text="O parâmetro $3 é uma máscara de bits: X=1, Y=2, Z=4 (ex: XY invertidos → $3=3)."/>
+                                            <LineBreak/>
+                                            <Run Text="Ao clicar 'Gravar na placa', os valores são enviados individualmente ao GRBL como $N=valor."/>
+                                            <LineBreak/>
+                                            <Run Text="Use 'Ler da placa' (requer ligação activa) para carregar os parâmetros actuais do controlador."/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- TAB: GRBL Controller                                        -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <TabItem Header="GRBL Controller" x:Name="TabGrbl">
+                <TabItem.Tag>
+                    <TextBlock Text="⚡" FontSize="18" Foreground="#3f51b5"/>
+                </TabItem.Tag>
+                <DockPanel Background="White">
+
+                    <!-- Top toolbar: Read / Write / Status -->
+                    <Border DockPanel.Dock="Top" Background="#e8eaf6" BorderBrush="#c5cae9"
+                            BorderThickness="0,0,0,1" Padding="8,5">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BtnGrblRead" Width="130" Height="28" Margin="0,0,8,0"
+                                    Click="BtnGrblRead_Click"
+                                    Background="#3f51b5" Foreground="White" BorderBrush="#283593">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⬇" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Read from board" FontSize="11" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="BtnGrblWrite" Width="130" Height="28" Margin="0,0,8,0"
+                                    Click="BtnGrblWrite_Click"
+                                    Background="#388e3c" Foreground="White" BorderBrush="#1b5e20">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⬆" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Write to board" FontSize="11" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="BtnGrblDefaults" Width="130" Height="28" Margin="0,0,16,0"
+                                    Click="BtnGrblDefaults_Click"
+                                    Background="#f57f17" Foreground="White" BorderBrush="#e65100">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="↺" FontSize="13" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Reset defaults" FontSize="11" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <TextBlock x:Name="TbGrblStatus" Text="Not connected — use 'Read from board' after connecting."
+                                       FontSize="10" Foreground="#555" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="GrblSettingsPanel" Margin="8" DataContext="{x:Null}">
+
+                            <!-- ── Row 1: Step signals + Pin inversions ── -->
+                            <UniformGrid Columns="2" Margin="0,0,0,6">
+
+                                <!-- Step signals -->
+                                <GroupBox Header="Step signals" Margin="0,0,4,0">
+                                    <Grid Margin="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="$0 — Step pulse (μs)"
+                                                   FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,4"/>
+                                        <TextBox   Grid.Row="0" Grid.Column="1" x:Name="TbGrbl0"
+                                                   Text="10" Width="70" Height="22" Margin="0,0,0,4"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="$1 — Step idle delay (ms)"
+                                                   FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                        <TextBox   Grid.Row="1" Grid.Column="1" x:Name="TbGrbl1"
+                                                   Text="25" Width="70" Height="22"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <!-- Pin inversions -->
+                                <GroupBox Header="Pin inversion" Margin="4,0,0,0">
+                                    <UniformGrid Columns="2" Margin="4">
+                                        <StackPanel Margin="0,2">
+                                            <TextBlock Text="$2 — Step port invert" FontSize="10" Foreground="#555"/>
+                                            <TextBox x:Name="TbGrbl2" Text="0" Width="70" Height="22"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,2">
+                                            <TextBlock Text="$3 — Dir port invert" FontSize="10" Foreground="#555"/>
+                                            <TextBox x:Name="TbGrbl3" Text="0" Width="70" Height="22"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="ChkGrbl4" Content="$4 — Step enable invert" FontSize="10" Margin="0,4"/>
+                                        <CheckBox x:Name="ChkGrbl5" Content="$5 — Limit pins invert"  FontSize="10" Margin="0,4"/>
+                                        <CheckBox x:Name="ChkGrbl6" Content="$6 — Probe pin invert"   FontSize="10" Margin="0,4"/>
+                                    </UniformGrid>
+                                </GroupBox>
+                            </UniformGrid>
+
+                            <!-- ── Row 2: Status / tolerances + Limits ── -->
+                            <UniformGrid Columns="2" Margin="0,0,0,6">
+
+                                <!-- Status / tolerances -->
+                                <GroupBox Header="Status &amp; tolerances" Margin="0,0,4,0">
+                                    <Grid Margin="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="80"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="$10 — Status report mask" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,4"/>
+                                        <TextBox   Grid.Row="0" Grid.Column="1" x:Name="TbGrbl10" Text="1" Height="22" Margin="0,0,0,4"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="$11 — Junction deviation (mm)" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,4"/>
+                                        <TextBox   Grid.Row="1" Grid.Column="1" x:Name="TbGrbl11" Text="0.010" Height="22" Margin="0,0,0,4"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="$12 — Arc tolerance (mm)" FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,4,4"/>
+                                        <TextBox   Grid.Row="2" Grid.Column="1" x:Name="TbGrbl12" Text="0.002" Height="22" Margin="0,0,0,4"/>
+
+                                        <CheckBox  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                                   x:Name="ChkGrbl13" Content="$13 — Report in inches" FontSize="10" Margin="0,4"/>
+                                    </Grid>
+                                </GroupBox>
+
+                                <!-- Limits -->
+                                <GroupBox Header="Limits" Margin="4,0,0,0">
+                                    <StackPanel Margin="4">
+                                        <CheckBox x:Name="ChkGrbl20" Content="$20 — Soft limits" FontSize="10" Margin="0,4"/>
+                                        <TextBlock Text="Stops movement at machine boundaries (requires homing)." FontSize="9" Foreground="#666" TextWrapping="Wrap" Margin="18,0,0,6"/>
+                                        <CheckBox x:Name="ChkGrbl21" Content="$21 — Hard limits" FontSize="10" Margin="0,4"/>
+                                        <TextBlock Text="Triggers immediate alarm when limit switch is hit." FontSize="9" Foreground="#666" TextWrapping="Wrap" Margin="18,0,0,4"/>
+                                    </StackPanel>
+                                </GroupBox>
+                            </UniformGrid>
+
+                            <!-- ── Row 3: Homing ── -->
+                            <GroupBox Header="Homing ($22 – $27)" Margin="0,0,0,6">
+                                <Grid Margin="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="90"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Row 0 -->
+                                    <CheckBox  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                               x:Name="ChkGrbl22" Content="$22 — Enable homing cycle"
+                                               FontSize="10" Margin="0,0,0,6"/>
+
+                                    <!-- Row 1 -->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="$23 — Homing dir invert mask"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,4"/>
+                                    <TextBox   Grid.Row="1" Grid.Column="1" x:Name="TbGrbl23" Text="0" Height="22" Margin="0,0,0,4"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="$24 — Homing feed (mm/min)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,4"/>
+                                    <TextBox   Grid.Row="1" Grid.Column="4" x:Name="TbGrbl24" Text="25" Height="22" Margin="0,0,0,4"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="6" Text="$25 — Homing seek (mm/min)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,4"/>
+                                    <TextBox   Grid.Row="1" Grid.Column="7" x:Name="TbGrbl25" Text="500" Height="22" Margin="0,0,0,4"/>
+
+                                    <!-- Row 2 -->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="$26 — Homing debounce (ms)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBox   Grid.Row="2" Grid.Column="1" x:Name="TbGrbl26" Text="250" Height="22"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="3" Text="$27 — Homing pull-off (mm)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBox   Grid.Row="2" Grid.Column="4" x:Name="TbGrbl27" Text="1.0" Height="22"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- ── Row 4: Spindle ── -->
+                            <GroupBox Header="Spindle ($30 – $32)" Margin="0,0,0,6">
+                                <Grid Margin="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="$30 — Max spindle speed (RPM)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBox   Grid.Column="1" x:Name="TbGrbl30" Text="1000" Height="22"/>
+
+                                    <TextBlock Grid.Column="3" Text="$31 — Min spindle speed (RPM)"
+                                               FontSize="10" Foreground="#555" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBox   Grid.Column="4" x:Name="TbGrbl31" Text="0" Height="22"/>
+
+                                    <CheckBox  Grid.Column="5" x:Name="ChkGrbl32"
+                                               Content="$32 — Laser mode" FontSize="10"
+                                               VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <!-- ── Row 5: Axes steps/mm, max rate, accel, travel ── -->
+                            <GroupBox Header="Axis parameters">
+                                <Grid Margin="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="22"/>
+                                        <RowDefinition Height="28"/>
+                                        <RowDefinition Height="28"/>
+                                        <RowDefinition Height="28"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Headers -->
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Steps / mm" FontSize="10" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Max rate (mm/min)" FontSize="10" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Acceleration (mm/s²)" FontSize="10" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Max travel (mm)" FontSize="10" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                    <!-- X -->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X" FontSize="22" FontWeight="Bold" Foreground="#e53935" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="TbGrbl100" Text="250" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="1" Grid.Column="2" x:Name="TbGrbl110" Text="500" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="1" Grid.Column="3" x:Name="TbGrbl120" Text="10"  Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="1" Grid.Column="4" x:Name="TbGrbl130" Text="200" Height="22" Margin="2,2"/>
+
+                                    <!-- Y -->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y" FontSize="22" FontWeight="Bold" Foreground="#f9a825" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="TbGrbl101" Text="250" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="2" Grid.Column="2" x:Name="TbGrbl111" Text="500" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="2" Grid.Column="3" x:Name="TbGrbl121" Text="10"  Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="2" Grid.Column="4" x:Name="TbGrbl131" Text="200" Height="22" Margin="2,2"/>
+
+                                    <!-- Z -->
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Z" FontSize="22" FontWeight="Bold" Foreground="#1e88e5" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="TbGrbl102" Text="250" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="3" Grid.Column="2" x:Name="TbGrbl112" Text="500" Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="3" Grid.Column="3" x:Name="TbGrbl122" Text="10"  Height="22" Margin="2,2"/>
+                                    <TextBox Grid.Row="3" Grid.Column="4" x:Name="TbGrbl132" Text="200" Height="22" Margin="2,2"/>
+                                </Grid>
+                            </GroupBox>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
             </TabItem>
 
         </TabControl>

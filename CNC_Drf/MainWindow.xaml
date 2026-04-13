@@ -80,6 +80,13 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🎛 " FontSize="10" Foreground="#90caf9"/>
+                    <TextBlock Text="{Binding ControllerName}" Foreground="#90caf9" FontSize="10" FontWeight="Bold"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
                 <TextBlock Text="{Binding TaskTime, StringFormat='Task: {0}'}" Foreground="#aaa" FontSize="10"/>
             </StatusBarItem>
             <Separator/>
@@ -107,7 +114,7 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*" MinWidth="300"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="380" MinWidth="260"/>
+                <ColumnDefinition Width="420" MinWidth="300"/>
             </Grid.ColumnDefinitions>
 
             <views:ControlPanel x:Name="CtrlPanel" Grid.Column="0" DataContext="{Binding}"/>

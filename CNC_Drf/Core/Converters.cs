@@ -47,12 +47,28 @@ public class EmptyToVisibleConverter : IValueConverter
     public object ConvertBack(object v, Type t, object p, CultureInfo c) => throw new NotSupportedException();
 }
 
+[ValueConversion(typeof(bool), typeof(Visibility))]
+public class BoolToVisibleConverter : IValueConverter
+{
+    public object Convert(object value, Type t, object p, CultureInfo c)
+        => value is true ? Visibility.Visible : Visibility.Collapsed;
+    public object ConvertBack(object v, Type t, object p, CultureInfo c) => throw new NotSupportedException();
+}
+
+[ValueConversion(typeof(bool), typeof(Visibility))]
+public class InvertBoolToVisibleConverter : IValueConverter
+{
+    public object Convert(object value, Type t, object p, CultureInfo c)
+        => value is true ? Visibility.Collapsed : Visibility.Visible;
+    public object ConvertBack(object v, Type t, object p, CultureInfo c) => throw new NotSupportedException();
+}
+
 [ValueConversion(typeof(bool), typeof(Brush))]
 public class CommentColorConverter : IValueConverter
 {
     public object Convert(object value, Type t, object p, CultureInfo c)
         => value is true
-            ? new SolidColorBrush(Color.FromRgb(0x77, 0x99, 0x66))
-            : new SolidColorBrush(Color.FromRgb(0xc8, 0xc8, 0xc8));
+            ? new SolidColorBrush(Color.FromRgb(0x6a, 0x99, 0x55))  // comentários: verde
+            : new SolidColorBrush(Color.FromRgb(0xe0, 0xe0, 0xe0)); // código: branco claro
     public object ConvertBack(object v, Type t, object p, CultureInfo c) => throw new NotSupportedException();
 }
